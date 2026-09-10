@@ -1,0 +1,60 @@
+---
+import { render, getEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CtaBlock from '../../components/CtaBlock.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCaseNotes, fmtDate, LANE_LABEL, noteTitle } from '../../lib/content';
+import { webPage, breadcrumbs, article } from '../../lib/jsonld';
+
+export async function getStaticPaths() {
+  return (await getCaseNotes()).map((n) => ({ params: { slug: n.id }, props: { entry: n } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const path = `/case-notes/${entry.id}`;
+const service = await getEntry(entry.data.service);
+const readiness = await getEntry(entry.data.readiness);
+if (!service || !readiness) throw new Error(`Broken reference on case note ${entry.id}`);
+const others = (await getCaseNotes()).filter((n) => n.id !== entry.id);
+const shortTitle = noteTitle(entry.data.title);
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Case notes', path: '/case-notes' }, { name: shortTitle, path }];
+const graph = [
+  webPage(path, entry.data.title, entry.data.description),
+  breadcrumbs(crumbs),
+  article({ path, headline: entry.data.title, description: entry.data.description, published: entry.data.published, updated: entry.data.updated, keywords: [LANE_LABEL[entry.data.lane], 'MLSecOps', 'case note'] }),
+];
+---
+<Base title={entry.data.title} description={entry.data.description} {path} graph={graph} type="article" published={entry.data.published} updated={entry.data.updated}>
+  <article>
+    <header class="wrap py-12 md:py-16">
+      <Breadcrumbs items={crumbs} />
+      <p class="mt-6 flex flex-wrap gap-2"><span class="tag">Case note</span><span class="tag">{LANE_LABEL[entry.data.lane]}</span><span class="tag">{entry.data.sector}</span><span class="tag">Illustrative composite</span></p>
+      <h1 class="mt-4">{shortTitle}</h1>
+      <p class="mono mt-4 text-xs muted">Published <time datetime={entry.data.published.toISOString()}>{fmtDate(entry.data.published)}</time> · Service: <a href={`/services/${service.id}`}>{service.data.shortTitle}</a> · Framework: <a href={`/readiness/${readiness.id}`}>{readiness.data.shortTitle}</a></p>
+    </header>
+    <div class="wrap grid gap-12 lg:grid-cols-[2fr_1fr] pb-14">
+      <div class="prose case-note"><Content /></div>
+      <aside class="space-y-6 self-start lg:sticky lg:top-24">
+        <div class="panel p-5">
+          <p class="kicker">Fixed by</p>
+          <p class="mt-2 font-semibold"><a href={`/services/${service.id}`}>{service.data.shortTitle}</a></p>
+          <p class="muted mt-1 text-sm">{service.data.summary}</p>
+        </div>
+        <div class="panel p-5">
+          <p class="kicker">Satisfies</p>
+          <p class="mt-2 font-semibold"><a href={`/readiness/${readiness.id}`}>{readiness.data.shortTitle}</a></p>
+          <p class="muted mt-1 text-sm">{readiness.data.summary}</p>
+        </div>
+        <div class="panel p-5">
+          <p class="kicker">More case notes</p>
+          <ul class="mt-2 space-y-1.5 text-sm">{others.map((n) => <li><a href={`/case-notes/${n.id}`}>{noteTitle(n.data.title)}</a></li>)}</ul>
+        </div>
+      </aside>
+    </div>
+  </article>
+  <div class="wrap"><CtaBlock id="cn-cta" heading="Seen this pattern in your pipeline?" body="Most teams recognize at least one of these. A 30-minute call is enough to tell whether it applies to you and what a fixed-scope fix looks like." /></div>
+</Base>
+<style is:global>
+  .case-note > p:first-of-type { font-size: 1.1rem; line-height: 1.55; }
+  .case-note figure { margin-block: 1.5rem; }
+</style>

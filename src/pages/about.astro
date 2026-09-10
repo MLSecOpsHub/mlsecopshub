@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBlock from '../components/CtaBlock.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE, utm } from '../config/site';
+import { getGitHubStats } from '../lib/github';
+import { getNewsletter } from '../lib/substack';
+import { webPage, breadcrumbs, PERSON_ID } from '../lib/jsonld';
+
+const title = 'About Riccardo Biosas and MLSecOpsHub | MLSecOps';
+const description =
+  'Riccardo Biosas is a security engineer, founder of MLSecOpsHub, author of The MLSecOps Hacker newsletter and maintainer of the awesome-MLSecOps list.';
+const [gh, nl] = await Promise.all([getGitHubStats(), getNewsletter()]);
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }];
+const graph = [
+  { ...webPage('/about', title, description, 'AboutPage'), mainEntity: { '@id': PERSON_ID } },
+  breadcrumbs(crumbs),
+];
+---
+<Base {title} {description} path="/about" graph={graph}>
+  <section class="wrap py-12 md:py-16">
+    <Breadcrumbs items={crumbs} />
+    <p class="kicker mt-6">About</p>
+    <h1 class="mt-3">Riccardo Biosas, security engineer, founder of MLSecOpsHub</h1>
+    <p class="answer mt-5">
+      <strong>Riccardo Biosas</strong> is a security engineer who founded MLSecOpsHub, the MLSecOps and AI security practice behind The MLSecOps Hacker newsletter and the awesome-MLSecOps GitHub list. He works with engineering teams on AI security assessments, ML pipeline hardening and governance readiness for the EU AI Act, Cyber Resilience Act, NIST AI RMF and ISO/IEC 42001.
+    </p>
+  </section>
+
+  <div class="wrap"><CtaBlock id="about-cta" /></div>
+
+  <section class="wrap py-14 grid gap-12 lg:grid-cols-[2fr_1fr]">
+    <div class="prose">
+      <h2>Background</h2>
+      <p>Riccardo's work sits at the boundary between security engineering and machine learning systems: the pipelines that move models, the applications that wrap them and the agents that give them tools. That boundary is where most AI incidents happen, and it is usually owned by nobody. MLSecOpsHub exists to own it for the duration of an engagement and to leave controls behind that the team can run without him.</p>
+      <p>The practice focuses on three lanes. Model supply-chain security: unsafe serialization, model signing and provenance. Prompt injection: every untrusted channel into a model and every channel out. Agentic and Model Context Protocol security: tool permissions, session credentials and confirmation boundaries. The <a href="/case-notes">case notes</a> show what each looks like in a real pipeline.</p>
+
+      <h2>The newsletter</h2>
+      <p><a href={utm(SITE.newsletter.url)} rel="noopener">The MLSecOps Hacker</a> is a biweekly newsletter on AI security, MLSecOps and AI governance, written for CISOs, security engineers and ML engineers. It has published {nl.count} issues, including the reference explainer <a href={utm(SITE.newsletter.whatIsMlsecops)} rel="noopener">What is MLSecOps?</a>. The newsletter stays on Substack; this site links to it and does not mirror it.</p>
+
+      <h2>The awesome-MLSecOps list</h2>
+      <p>The <a href={utm(SITE.github.listUrl)} rel="noopener">awesome-MLSecOps</a> repository is a curated list of open-source tools, papers and resources for securing machine learning systems. It has {gh.stars.toLocaleString('en-US')} GitHub stars and {gh.contributors} contributors, and it is moving to the <a href={utm(SITE.github.org)} rel="noopener">MLSecOpsHub organization</a> on GitHub. Its companion site, <a href={SITE.social.awesome} rel="noopener">awesomemlsecops.com</a>, hosts the browsable tool directory and the MLSecOps glossary. MLSecOpsHub does not build or ship security tooling; it links to the open-source ecosystem and works with it.</p>
+
+      <h2>Writing and speaking</h2>
+      <ul>
+        <li><a href={utm(SITE.newsletter.url)} rel="noopener">The MLSecOps Hacker</a>: newsletter archive on Substack.</li>
+        <li><a href="/data">Agentic Attack Index</a>: an open dataset of documented prompt injection and agent incidents maintained by MLSecOpsHub.</li>
+        <li><a href={SITE.social.x} rel="me noopener">@MLSecOpsHacker on X</a> and <a href={SITE.social.instagram} rel="me noopener">@aisecurity.hacker on Instagram</a>: short-form analysis and diagrams.</li>
+        <li>Talks and podcast appearances are listed on the <a href="/blog">blog</a> as they are announced.</li>
+      </ul>
+
+      <h2>How to work with MLSecOpsHub</h2>
+      <p>Every engagement starts with a 30-minute call and a written scope. Work is remote-first in EU and APAC time zones. The <a href="/services">services page</a> lists the three engagements and what each delivers; the <a href="/readiness">readiness hub</a> shows the method applied to four frameworks.</p>
+    </div>
+    <aside class="space-y-6 self-start lg:sticky lg:top-24">
+      <div class="panel p-5">
+        <p class="kicker">Profiles</p>
+        <ul class="mt-2 space-y-1.5 text-sm">
+          <li><a href={utm(SITE.github.org)} rel="me noopener">GitHub: {SITE.github.orgName}</a></li>
+          <li><a href={utm(SITE.social.substack)} rel="me noopener">Substack: The MLSecOps Hacker</a></li>
+          <li><a href={SITE.social.x} rel="me noopener">X: @MLSecOpsHacker</a></li>
+          <li><a href={SITE.social.instagram} rel="me noopener">Instagram: @aisecurity.hacker</a></li>
+          {SITE.social.linkedin && <li><a href={SITE.social.linkedin} rel="me noopener">LinkedIn</a></li>}
+        </ul>
+      </div>
+      <div class="panel p-5">
+        <p class="kicker">Numbers, read at build time</p>
+        <ul class="mt-2 space-y-1 text-sm">
+          <li class="flex justify-between"><span>GitHub stars</span><span class="mono">{gh.stars.toLocaleString('en-US')}</span></li>
+          <li class="flex justify-between"><span>Contributors</span><span class="mono">{gh.contributors}</span></li>
+          <li class="flex justify-between"><span>Newsletter issues</span><span class="mono">{nl.count}</span></li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+</Base>

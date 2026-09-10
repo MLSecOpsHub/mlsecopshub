@@ -1,0 +1,9 @@
+---
+/** Renders a single @graph JSON-LD block. Organization and WebSite are always included. */
+import { organization, website, person, type Graph } from '../lib/jsonld';
+interface Props { graph: Graph[] }
+const { graph } = Astro.props;
+const data = { '@context': 'https://schema.org', '@graph': [organization(), person(), website(), ...graph] };
+const json = JSON.stringify(data).replace(/</g, '\\u003c');
+---
+<script type="application/ld+json" set:html={json} is:inline />

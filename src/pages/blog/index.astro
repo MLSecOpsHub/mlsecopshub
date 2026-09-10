@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaBlock from '../../components/CtaBlock.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getPosts, fmtDate } from '../../lib/content';
+import { SITE, utm } from '../../config/site';
+import { webPage, breadcrumbs } from '../../lib/jsonld';
+
+const title = 'MLSecOpsHub Blog: Announcements and Data Releases';
+const description =
+  'The MLSecOpsHub blog carries announcements and dataset releases that belong on this domain. Analysis and long-form articles stay on The MLSecOps Hacker.';
+const posts = await getPosts();
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }];
+const graph = [webPage('/blog', title, description, 'CollectionPage'), breadcrumbs(crumbs)];
+---
+<Base {title} {description} path="/blog" graph={graph}>
+  <section class="wrap py-12 md:py-16">
+    <Breadcrumbs items={crumbs} />
+    <p class="kicker mt-6">Blog</p>
+    <h1 class="mt-3">Announcements and data releases</h1>
+    <p class="answer mt-5"><strong>MLSecOpsHub</strong> publishes only announcements and dataset releases here. Analysis, threat write-ups and long-form articles are published every two weeks in <a href={utm(SITE.newsletter.url)} rel="noopener">The MLSecOps Hacker</a> on Substack, which stays the canonical home for that content. Anything republished here points back to the Substack original.</p>
+  </section>
+  <section class="wrap pb-14">
+    <ul class="divide-y divide-line border-y border-line">
+      {posts.map((p) => (
+        <li class="py-5 grid gap-1 sm:grid-cols-[8rem_1fr]">
+          <time datetime={p.data.published.toISOString()} class="mono text-xs muted">{fmtDate(p.data.published)}</time>
+          <div>
+            <h2 class="text-lg"><a href={`/blog/${p.id}`} class="text-ink no-underline hover:underline">{p.data.title}</a></h2>
+            <p class="muted mt-1 text-sm">{p.data.description}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <p class="mono mt-6 text-xs muted">Subscribe: <a href="/blog/rss.xml">RSS feed for the blog</a> · or the <a href="/newsletter">newsletter</a> for analysis.</p>
+  </section>
+  <div class="wrap"><CtaBlock id="blog-cta" /></div>
+</Base>

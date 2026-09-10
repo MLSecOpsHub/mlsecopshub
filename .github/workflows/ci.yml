@@ -1,0 +1,75 @@
+name: Build and verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Weekly rebuild so GitHub stars and newsletter issues stay fresh even without commits.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build, link check, budgets, Lighthouse, Pa11y
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Raises the GitHub API rate limit for the build-time stars/contributors fetch.
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PUBLIC_BOOKING_URL: ${{ vars.PUBLIC_BOOKING_URL }}
+      PUBLIC_CAL_LINK: ${{ vars.PUBLIC_CAL_LINK }}
+      PUBLIC_ANALYTICS_DOMAIN: ${{ vars.PUBLIC_ANALYTICS_DOMAIN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type-check
+        run: npm run check
+
+      - name: Build (prebuild generates icons and checklists; postbuild writes CSP headers and runs link, orphan, budget and SEO checks)
+        run: npm run build
+
+      - name: Verify vercel.json is up to date with the build
+        run: git diff --exit-code -- vercel.json || (echo "::error::vercel.json changed; run npm run build locally and commit it" && exit 1)
+
+      - name: Lighthouse (performance ≥ 95 or fail)
+        run: npx lhci autorun
+
+      - name: Pa11y (WCAG 2.2 AA)
+        run: |
+          npx astro preview --port 4321 > preview.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://localhost:4321/ > /dev/null && break; sleep 1; done
+          mkdir -p reports/pa11y
+          npx pa11y-ci --json > reports/pa11y/results.json || (cat reports/pa11y/results.json; exit 1)
+          cat reports/pa11y/results.json | node -e "const r=JSON.parse(require('fs').readFileSync(0,'utf8'));console.log('pa11y: '+r.passes+'/'+r.total+' passed, '+r.errors+' errors')"
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ github.sha }}
+          path: |
+            reports/lighthouse
+            reports/pa11y
+          retention-days: 30
+
+      - name: Upload site build
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.sha }}
+          path: dist
+          retention-days: 7

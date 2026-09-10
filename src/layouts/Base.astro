@@ -1,0 +1,35 @@
+---
+import '../styles/global.css';
+import Head from '../components/Head.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import JsonLd from '../components/JsonLd.astro';
+import type { Graph } from '../lib/jsonld';
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  graph?: Graph[];
+  canonical?: string;
+  ogImage?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  published?: Date;
+  updated?: Date;
+}
+const { title, description, path, graph = [], canonical, ogImage, type, noindex, published, updated } = Astro.props;
+---
+<html lang="en" dir="ltr">
+  <head>
+    <Head {title} {description} {path} {canonical} {ogImage} {type} {noindex} {published} {updated} />
+    <JsonLd graph={graph} />
+  </head>
+  <body class="min-h-dvh flex flex-col">
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header />
+    <main id="main" class="flex-1" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

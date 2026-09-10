@@ -1,0 +1,39 @@
+---
+/**
+ * Cal.com embed, loaded only after the visitor asks for it. Until then the page
+ * ships a plain link, so no third-party script runs on page load.
+ */
+import { SITE } from '../config/site';
+---
+<div class="panel p-6" id="booking">
+  <p class="kicker">Booking</p>
+  <h2 class="mt-2 text-xl">{SITE.cta.booking}</h2>
+  <p class="muted mt-2 max-w-prose">30 minutes, remote, no preparation needed. Bring the system you are worried about; leave with a scoped proposal or a reason not to need one.</p>
+  <p class="mt-4 flex flex-wrap gap-3">
+    <a href={SITE.bookingUrl} class="btn btn-primary plausible-event-name=Booking+Click" data-goal="booking" rel="noopener">{SITE.cta.booking}</a>
+    <button type="button" class="btn btn-secondary" data-cal-load data-cal-link={SITE.calLink}>Show calendar here</button>
+  </p>
+  <div data-cal-target class="mt-6 min-h-0" aria-live="polite"></div>
+</div>
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-cal-load]');
+  const target = document.querySelector<HTMLElement>('[data-cal-target]');
+  btn?.addEventListener('click', () => {
+    if (!target) return;
+    btn.disabled = true;
+    btn.textContent = 'Loading calendar…';
+    const link = btn.dataset.calLink ?? '';
+    const s = document.createElement('script');
+    s.src = 'https://app.cal.com/embed/embed.js';
+    s.async = true;
+    s.onload = () => {
+      const w = window as unknown as { Cal?: (...a: unknown[]) => void };
+      w.Cal?.('init', { origin: 'https://app.cal.com' });
+      w.Cal?.('inline', { elementOrSelector: target, calLink: link, config: { layout: 'month_view', theme: matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark' } });
+      btn.hidden = true;
+      target.style.minHeight = '640px';
+    };
+    s.onerror = () => { btn.textContent = 'Calendar failed to load. Use the link above.'; };
+    document.head.appendChild(s);
+  }, { once: true });
+</script>

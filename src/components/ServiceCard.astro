@@ -1,0 +1,12 @@
+---
+import type { Service } from '../lib/content';
+interface Props { service: Service; index: number }
+const { service, index } = Astro.props;
+---
+<article class="panel flex flex-col p-6">
+  <p class="kicker">Service 0{index}</p>
+  <h3 class="mt-2 text-lg"><a href={`/services/${service.id}`} class="text-ink no-underline hover:underline">{service.data.shortTitle}</a></h3>
+  <p class="muted mt-2 flex-1 text-sm">{service.data.summary}</p>
+  <p class="mono mt-4 text-xs muted">Duration: {service.data.duration.split(',')[0]}</p>
+  <p class="mt-3"><a href={`/services/${service.id}`} class="mono text-sm">Scope and deliverables →</a></p>
+</article>

@@ -1,0 +1,37 @@
+---
+import { SITE, NAV } from '../config/site';
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => current === href || current.startsWith(`${href}/`);
+---
+<header class="border-b border-line bg-bg/95 sticky top-0 z-40 backdrop-blur-sm">
+  <div class="wrap flex items-center justify-between gap-4 py-3">
+    <a href="/" class="flex items-center gap-2 no-underline text-ink" aria-label="MLSecOpsHub home">
+      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <rect x="1" y="1" width="30" height="30" rx="3" fill="none" stroke="var(--accent)" stroke-width="2" />
+        <path d="M8 22V10l4 6 4-6v12" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M20 10h4M20 16h4M20 22h4" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" />
+      </svg>
+      <span class="mono font-bold tracking-tight text-[0.95rem]">MLSecOps<span class="text-accent">Hub</span></span>
+    </a>
+    <button type="button" popovertarget="primary-nav" class="nav-toggle lg:hidden" aria-label="Open menu">menu</button>
+    <nav id="primary-nav" popover aria-label="Primary" class="primary-nav">
+      <ul class="flex flex-col gap-1 lg:flex-row lg:items-center lg:gap-1">
+        {NAV.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'block rounded-sm px-3 py-2 text-[0.9rem] no-underline hover:bg-panel hover:text-ink',
+                isActive(item.href) ? 'text-ink font-semibold' : 'text-muted',
+              ]}
+            >{item.label}</a>
+          </li>
+        ))}
+        <li class="mt-2 lg:ml-2 lg:mt-0">
+          <a href={SITE.bookingUrl} class="btn btn-primary btn-small plausible-event-name=Booking+Click" data-goal="booking" title={SITE.cta.booking} rel="noopener">{SITE.cta.bookingShort}</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,17 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "timeout": 30000,
+    "wait": 500,
+    "chromeLaunchConfig": { "args": ["--no-sandbox", "--disable-dev-shm-usage"] },
+    "runners": ["axe", "htmlcs"],
+    "hideElements": "iframe"
+  },
+  "urls": [
+    "http://localhost:4321/",
+    "http://localhost:4321/services/ai-security-assessment",
+    "http://localhost:4321/readiness/eu-ai-act",
+    "http://localhost:4321/data",
+    "http://localhost:4321/contact"
+  ]
+}

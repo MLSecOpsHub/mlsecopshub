@@ -1,0 +1,31 @@
+---
+/**
+ * The conversion block: booking CTA plus newsletter capture. Placed after the
+ * first section of every page and in the footer, with identical wording.
+ */
+import { SITE, utm } from '../config/site';
+import NewsletterForm from './NewsletterForm.astro';
+interface Props { heading?: string; body?: string; id?: string; variant?: 'panel' | 'plain' }
+const {
+  heading = 'Fixed-scope, quoted after a 30-minute call',
+  body = 'Tell MLSecOpsHub what you are shipping. You leave the call with a scoped proposal or a clear reason why you do not need one.',
+  id = 'cta',
+  variant = 'panel',
+} = Astro.props;
+---
+<aside aria-labelledby={`${id}-h`} class:list={[variant === 'panel' ? 'panel p-6 md:p-8' : '', 'grid gap-6 md:grid-cols-2 md:items-center']}>
+  <div>
+    <p class="kicker">Next step</p>
+    <h2 id={`${id}-h`} class="mt-2 text-xl md:text-2xl">{heading}</h2>
+    <p class="muted mt-2 max-w-prose">{body}</p>
+    <p class="mt-4 flex flex-wrap gap-3">
+      <a href={SITE.bookingUrl} class="btn btn-primary plausible-event-name=Booking+Click" data-goal="booking" rel="noopener">{SITE.cta.booking}</a>
+      <a href="/contact" class="btn btn-secondary">Or write first</a>
+    </p>
+  </div>
+  <div class="border-t border-line pt-6 md:border-l md:border-t-0 md:pl-8 md:pt-0">
+    <p class="kicker">Secondary</p>
+    <p class="mt-2 mb-3 text-sm muted">Not ready to talk? <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">{SITE.newsletter.name}</a> covers the same ground every two weeks.</p>
+    <NewsletterForm compact id={`${id}-nl`} />
+  </div>
+</aside>

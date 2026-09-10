@@ -1,0 +1,94 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaBlock from '../../components/CtaBlock.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Faq from '../../components/Faq.astro';
+import { getServices, getReadiness } from '../../lib/content';
+import { webPage, breadcrumbs, faqPage, service as serviceLd } from '../../lib/jsonld';
+
+const title = 'MLSecOps Consulting: Assessment, Hardening | MLSecOpsHub';
+const description =
+  'MLSecOps consulting from MLSecOpsHub: fixed-scope AI security assessments, MLSecOps pipeline hardening and AI governance readiness, quoted after a call.';
+const services = await getServices();
+const readiness = await getReadiness();
+const faq = [
+  { q: 'What does MLSecOps consulting include?', a: 'MLSecOps consulting from MLSecOpsHub covers three engagements: an AI security assessment of an LLM application, agent or pipeline; hands-on hardening of ML pipelines; and governance readiness for the EU AI Act, Cyber Resilience Act, NIST AI RMF and ISO/IEC 42001. All three produce artifacts, not slide decks.' },
+  { q: 'How are engagements priced?', a: 'Fixed-scope, quoted after a 30-minute call. The scope is written down before work starts, and the quote does not change unless the scope does.' },
+  { q: 'Which engagement should we start with?', a: 'If you have a system in production or about to ship, start with the assessment. If you already know the pipeline is the weak layer, start with hardening. If a regulatory date is the driver, start with readiness, which includes a light assessment.' },
+  { q: 'Do you work with teams outside Europe?', a: 'Yes. MLSecOpsHub is remote-first and works in EU and APAC time zones, with overlap hours agreed at kickoff. Testing is authorized in writing before it begins, wherever the systems are hosted.' },
+];
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Services', path: '/services' }];
+const graph = [
+  webPage('/services', title, description, 'CollectionPage'),
+  breadcrumbs(crumbs),
+  faqPage(faq, '/services'),
+  ...services.map((s) => serviceLd({ path: `/services/${s.id}`, name: s.data.shortTitle, description: s.data.summary, serviceType: s.data.serviceType })),
+];
+---
+<Base {title} {description} path="/services" graph={graph}>
+  <section class="wrap py-12 md:py-16">
+    <Breadcrumbs items={crumbs} />
+    <p class="kicker mt-6">Services</p>
+    <h1 class="mt-3">MLSecOps consulting: three fixed-scope engagements</h1>
+    <p class="answer mt-5">
+      <strong>MLSecOpsHub</strong> provides MLSecOps consulting as three fixed-scope engagements: an AI security assessment that tests an LLM application, agent or pipeline; MLSecOps pipeline hardening that implements safe formats, signing, provenance and least-privilege CI; and AI governance readiness that builds the evidence file for the EU AI Act, Cyber Resilience Act, NIST AI RMF and ISO/IEC 42001.
+    </p>
+  </section>
+
+  <section class="wrap pb-14" aria-label="Service comparison">
+    <div class="overflow-x-auto">
+      <table>
+        <thead>
+          <tr><th scope="col">Engagement</th><th scope="col">Start here if</th><th scope="col">Duration</th><th scope="col">Main deliverable</th></tr>
+        </thead>
+        <tbody>
+          {services.map((s) => (
+            <tr>
+              <th scope="row" class="normal-case tracking-normal text-sm font-semibold text-ink" style="font-family: var(--font-sans)"><a href={`/services/${s.id}`}>{s.data.shortTitle}</a></th>
+              <td>{s.data.forWho[0]}</td>
+              <td>{s.data.duration}</td>
+              <td>{s.data.deliverables[0]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="wrap"><CtaBlock id="services-cta" /></div>
+
+  <section class="wrap py-14 space-y-10">
+    {services.map((s, i) => (
+      <article class="grid gap-6 md:grid-cols-[1fr_2fr] border-t border-line pt-10" aria-labelledby={`svc-${s.id}`}>
+        <div>
+          <p class="kicker">Service 0{i + 1}</p>
+          <h2 id={`svc-${s.id}`} class="mt-2"><a href={`/services/${s.id}`} class="text-ink no-underline hover:underline">{s.data.shortTitle}</a></h2>
+          <p class="muted mt-3">{s.data.summary}</p>
+          <p class="mt-4"><a href={`/services/${s.id}`} class="btn btn-secondary btn-small">Full scope →</a></p>
+        </div>
+        <div class="grid gap-6 sm:grid-cols-2">
+          <div>
+            <h3 class="mono text-xs uppercase tracking-wider muted">For</h3>
+            <ul class="mt-2 space-y-2 text-sm list-disc pl-4">{s.data.forWho.slice(0, 3).map((f) => <li>{f}</li>)}</ul>
+          </div>
+          <div>
+            <h3 class="mono text-xs uppercase tracking-wider muted">You receive</h3>
+            <ul class="mt-2 space-y-2 text-sm list-disc pl-4">{s.data.deliverables.slice(0, 4).map((d) => <li>{d}</li>)}</ul>
+          </div>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="wrap pb-14 grid gap-10 lg:grid-cols-2">
+    <Faq items={faq} id="services-faq" />
+    <div class="panel p-6 self-start">
+      <p class="kicker">Readiness pages</p>
+      <p class="muted mt-2 text-sm">Each framework page maps obligations to controls and links to the engagement that implements them.</p>
+      <ul class="mt-3 space-y-1.5 text-sm">
+        {readiness.map((r) => <li><a href={`/readiness/${r.id}`}>{r.data.shortTitle}</a></li>)}
+      </ul>
+      <p class="mt-4 text-sm muted">Evidence for what these controls stop: the <a href="/data">Agentic Attack Index</a> and the <a href="/case-notes">case notes</a>.</p>
+    </div>
+  </section>
+</Base>

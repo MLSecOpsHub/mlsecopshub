@@ -1,0 +1,24 @@
+{
+  "issues": [
+    {
+      "title": "Safetensors Won. Model Serialization Attacks Didn’t Stop.",
+      "url": "https://themlsecopshacker.com/p/safetensors-won-model-serialization",
+      "date": "2026-08-28T05:40:54.000Z",
+      "summary": "Winning the format war did not end the supply-chain war."
+    },
+    {
+      "title": "AI Security: Model Serialization Attacks",
+      "url": "https://themlsecopshacker.com/p/ai-security-model-serialization-attacks",
+      "date": "2024-11-04T12:42:17.000Z",
+      "summary": "Navigating the Pitfalls of Model Serialization And ML Supply Chain Vulnerabilities: Best Practices for AI Security"
+    },
+    {
+      "title": "What is MLSecOps?",
+      "url": "https://themlsecopshacker.com/p/what-is-mlsecops",
+      "date": "2024-10-08T12:14:00.000Z",
+      "summary": "The machines are coming, but who watches the watchers?"
+    }
+  ],
+  "count": 3,
+  "fetchedAt": "2026-09-10T05:06:24.083Z"
+}

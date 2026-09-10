@@ -1,0 +1,16 @@
+---
+/**
+ * Substack subscribe form. Works without JavaScript: the form posts directly to
+ * Substack's free-subscription endpoint, which responds with a confirmation page.
+ */
+import { SITE } from '../config/site';
+interface Props { compact?: boolean; id?: string }
+const { compact = false, id = 'newsletter' } = Astro.props;
+---
+<form method="post" action={`${SITE.newsletter.subscribeAction}?nojs=true`} class:list={['flex flex-col gap-2', compact ? 'sm:flex-row sm:items-end' : '']} data-goal="newsletter">
+  <div class="flex-1">
+    <label for={`${id}-email`}>Email for {SITE.newsletter.name}</label>
+    <input id={`${id}-email`} type="email" name="email" required autocomplete="email" placeholder="you@company.com" inputmode="email" />
+  </div>
+  <button type="submit" class="btn btn-secondary plausible-event-name=Newsletter+Submit">Subscribe, free, biweekly</button>
+</form>

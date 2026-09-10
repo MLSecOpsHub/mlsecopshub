@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE } from '../config/site';
+import { webPage, breadcrumbs } from '../lib/jsonld';
+const title = 'Imprint (Legal Notice) | MLSecOpsHub';
+const description = 'Legal notice for mlsecopshub.com: the entity operating the site, its registered address, contact details and the person responsible for the content.';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Imprint', path: '/imprint' }];
+---
+<Base {title} {description} path="/imprint" graph={[webPage('/imprint', title, description), breadcrumbs(crumbs)]}>
+  <section class="wrap-narrow py-12 md:py-16">
+    <Breadcrumbs items={crumbs} />
+    <p class="kicker mt-6">Legal</p>
+    <h1 class="mt-3">Imprint</h1>
+    <p class="answer mt-5">This legal notice identifies the entity that operates mlsecopshub.com and the person responsible for its content, as required by EU and member-state law for commercial websites.</p>
+    <div class="prose mt-8">
+      <h2>Operator</h2>
+      <!-- PLACEHOLDER: replace with the registered legal entity before launch -->
+      <p>{SITE.legalName}<br />[Legal entity name and form]<br />[Street and number]<br />[Postal code, city]<br />[Country]</p>
+      <h2>Contact</h2>
+      <p>Email: <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a><br />Web: <a href="/">{SITE.url}</a></p>
+      <h2>Responsible for content</h2>
+      <p>{SITE.founder.name}, at the address above.</p>
+      <h2>Registration and tax</h2>
+      <p>[Commercial register and number, if applicable]<br />[VAT identification number, if applicable]</p>
+      <h2>Liability for content and links</h2>
+      <p>The content of this site is prepared with care, but MLSecOpsHub does not guarantee its accuracy, completeness or currency. Readiness pages paraphrase regulatory obligations for engineering purposes and are not legal advice. External links point to third-party sites whose operators are responsible for their content.</p>
+      <h2>Copyright</h2>
+      <p>Text and diagrams on this site are © {SITE.legalName} unless stated otherwise. The Agentic Attack Index is licensed under CC BY 4.0.</p>
+    </div>
+  </section>
+</Base>

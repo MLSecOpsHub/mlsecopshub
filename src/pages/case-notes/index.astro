@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaBlock from '../../components/CtaBlock.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CaseNoteCard from '../../components/CaseNoteCard.astro';
+import { getCaseNotes } from '../../lib/content';
+import { webPage, breadcrumbs } from '../../lib/jsonld';
+
+const title = 'MLSecOps Case Notes: Anonymized Engagements | MLSecOpsHub';
+const description =
+  'Case notes from MLSecOpsHub: anonymized, illustrative write-ups of AI security engagements, each structured as context, finding, fix and outcome.';
+const notes = await getCaseNotes();
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Case notes', path: '/case-notes' }];
+const graph = [webPage('/case-notes', title, description, 'CollectionPage'), breadcrumbs(crumbs)];
+---
+<Base {title} {description} path="/case-notes" graph={graph}>
+  <section class="wrap py-12 md:py-16">
+    <Breadcrumbs items={crumbs} />
+    <p class="kicker mt-6">Case notes</p>
+    <h1 class="mt-3">Case notes: what an MLSecOps engagement changes</h1>
+    <p class="answer mt-5">
+      <strong>MLSecOpsHub</strong> case notes are one-page, anonymized write-ups of engagement patterns, structured as context, finding, fix and outcome. Each is an illustrative composite: names, numbers and architecture details are altered, and no client is identifiable. They show the actual mechanism of a weakness and the controls that removed it.
+    </p>
+  </section>
+  <section class="wrap pb-14">
+    <div class="grid gap-4 md:grid-cols-3">{notes.map((n) => <CaseNoteCard note={n} />)}</div>
+    <p class="mono mt-6 text-xs muted">Subscribe: <a href="/case-notes/rss.xml">RSS feed for case notes</a></p>
+  </section>
+  <div class="wrap"><CtaBlock id="cn-cta" /></div>
+  <section class="wrap py-14 prose">
+    <h2>Why composites, not named clients</h2>
+    <p>Security engagements are covered by confidentiality agreements, and a specific architecture is often enough to identify a company. MLSecOpsHub therefore publishes patterns rather than clients: each note combines details from more than one engagement into a single coherent example. The technical content is accurate; the identifying content is not real. Where a pattern maps to a public incident, the note links to the <a href="/data">Agentic Attack Index</a> entry.</p>
+    <p>Each note links to the <a href="/services">service</a> that addresses it and to the <a href="/readiness">readiness page</a> whose obligations it satisfies.</p>
+  </section>
+</Base>

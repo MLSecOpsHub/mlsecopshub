@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaBlock from '../../components/CtaBlock.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getReadiness } from '../../lib/content';
+import { webPage, breadcrumbs } from '../../lib/jsonld';
+
+const title = 'AI Governance Readiness Hub: EU AI Act to ISO 42001';
+const description =
+  'MLSecOpsHub maps EU AI Act, Cyber Resilience Act, NIST AI RMF and ISO/IEC 42001 obligations to concrete MLSecOps controls, with a checklist for each one.';
+const pages = await getReadiness();
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Readiness', path: '/readiness' }];
+const graph = [webPage('/readiness', title, description, 'CollectionPage'), breadcrumbs(crumbs)];
+---
+<Base {title} {description} path="/readiness" graph={graph}>
+  <section class="wrap py-12 md:py-16">
+    <Breadcrumbs items={crumbs} />
+    <p class="kicker mt-6">Readiness</p>
+    <h1 class="mt-3">AI governance readiness: obligations mapped to controls</h1>
+    <p class="answer mt-5">
+      <strong>MLSecOpsHub</strong> maintains one readiness page per framework. Each page paraphrases the framework's security and documentation obligations, maps them to concrete MLSecOps controls such as model signing, safe deserialization, prompt-injection testing and agent permission boundaries, names the evidence an auditor expects, and offers the checklist as Markdown and PDF.
+    </p>
+  </section>
+
+  <section class="wrap pb-14" aria-label="Frameworks">
+    <div class="grid gap-4 md:grid-cols-2">
+      {pages.map((r) => (
+        <article class="panel p-6 flex flex-col">
+          <p class="kicker">{r.data.framework}</p>
+          <h2 class="mt-2 text-xl"><a href={`/readiness/${r.id}`} class="text-ink no-underline hover:underline">{r.data.shortTitle}</a></h2>
+          <p class="muted mt-2 flex-1 text-sm">{r.data.summary}</p>
+          <p class="mono mt-4 text-xs muted">{r.data.controls.length} obligations mapped · {r.data.checklist.reduce((n, s) => n + s.items.length, 0)} checklist items</p>
+          <p class="mt-3 flex flex-wrap gap-3 text-sm"><a href={`/readiness/${r.id}`}>Read the mapping →</a><a href={`/downloads/${r.id}-checklist.pdf`} class="plausible-event-name=PDF+Download" data-goal="pdf">Checklist PDF</a></p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <div class="wrap"><CtaBlock id="readiness-cta" heading="Have this run against your pipeline" body="The public pages are generic by design. The readiness engagement applies the same mapping to your systems, verifies the claims and builds the evidence file." /></div>
+
+  <section class="wrap py-14 prose">
+    <h2>How to read these pages</h2>
+    <p>Every obligation is paraphrased, not quoted, and cited to the official text. The control column names an engineering control that MLSecOpsHub has implemented in real pipelines, and the evidence column names the artifact that proves it exists: a CI configuration, an attestation, a log schema, a test report. The frameworks overlap heavily on security, so the same control often satisfies several of them; the <a href="/services/ai-governance-readiness">AI governance readiness</a> engagement produces a single matrix across all four.</p>
+    <p>The threat side of the mapping comes from the incidents in the <a href="/data">Agentic Attack Index</a> and from the anonymized <a href="/case-notes">case notes</a>. Neither page is legal advice; both are designed to be handed to counsel and auditors.</p>
+  </section>
+</Base>

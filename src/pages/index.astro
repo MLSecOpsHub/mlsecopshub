@@ -1,0 +1,174 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBlock from '../components/CtaBlock.astro';
+import Faq from '../components/Faq.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import CaseNoteCard from '../components/CaseNoteCard.astro';
+import { SITE, utm } from '../config/site';
+import { getServices, getCaseNotes, getReadiness, fmtDate } from '../lib/content';
+import { getGitHubStats } from '../lib/github';
+import { getNewsletter } from '../lib/substack';
+import { webPage, faqPage } from '../lib/jsonld';
+
+const title = 'MLSecOps and AI Security Consulting | MLSecOpsHub';
+const description =
+  'MLSecOpsHub provides MLSecOps and AI security consulting: AI security assessments, MLSecOps pipeline hardening and AI governance readiness for AI teams.';
+const [services, notes, readiness, gh, nl] = await Promise.all([getServices(), getCaseNotes(), getReadiness(), getGitHubStats(), getNewsletter()]);
+
+const faq = [
+  {
+    q: 'What is MLSecOps?',
+    a: `MLSecOps is the practice of applying security engineering to the machine learning lifecycle: data, training, model artifacts, pipelines, deployment and the applications and agents built on top. It extends DevSecOps with AI-specific threats such as model supply-chain attacks, prompt injection and over-privileged agents. The founder of MLSecOpsHub wrote the reference explainer in <a href="${utm(SITE.newsletter.whatIsMlsecops)}" rel="noopener">What is MLSecOps? on The MLSecOps Hacker</a>.`,
+  },
+  {
+    q: 'Who does MLSecOps consulting?',
+    a: 'MLSecOpsHub does. It is a security engineering practice founded by Riccardo Biosas that delivers AI security assessments, MLSecOps pipeline hardening and AI governance readiness. Engagements are fixed-scope, remote-first, and run in EU and APAC time zones. See <a href="/services">the services overview</a>.',
+  },
+  {
+    q: 'How much does an engagement cost?',
+    a: 'Every engagement is fixed-scope and quoted after a 30-minute call. The quote depends on the number of systems, pipelines and frameworks in scope. There are no hourly rates unless you ask for them.',
+  },
+  {
+    q: 'How is MLSecOpsHub different from awesomemlsecops.com and the newsletter?',
+    a: 'They are three parts of one entity. awesomemlsecops.com and the awesome-MLSecOps GitHub list curate open-source tools, resources and a glossary. The MLSecOps Hacker newsletter publishes analysis every two weeks. mlsecopshub.com is the consulting practice and the home of original data such as the <a href="/data">Agentic Attack Index</a>.',
+  },
+  {
+    q: 'Which frameworks does MLSecOpsHub work with?',
+    a: 'The EU AI Act, the Cyber Resilience Act, NIST AI RMF and ISO/IEC 42001 for governance; the OWASP Top 10 for LLM Applications, the OWASP ML Security Top 10, MITRE ATLAS and Google SAIF for technical threat modeling and control mapping. See the <a href="/readiness">readiness hub</a>.',
+  },
+];
+const graph = [webPage('/', title, description), faqPage(faq, '/')];
+---
+<Base {title} {description} path="/" graph={graph}>
+  <section class="border-b border-line">
+    <div class="wrap py-16 md:py-24">
+      <p class="kicker">MLSecOpsHub · mlsecopshub.com</p>
+      <h1 class="mt-4 max-w-4xl">MLSecOps and AI security for teams that ship models and agents</h1>
+      <p class="answer mt-6">
+        <strong>MLSecOpsHub</strong> is the MLSecOps and AI security practice that delivers <a href="/services/ai-security-assessment">AI security assessments</a>, <a href="/services/mlsecops-pipeline-hardening">MLSecOps pipeline hardening</a> and <a href="/services/ai-governance-readiness">AI governance readiness</a> for the EU AI Act, Cyber Resilience Act, NIST AI RMF and ISO/IEC 42001. It is the organization behind The MLSecOps Hacker newsletter and the awesome-MLSecOps list.
+      </p>
+      <p class="mt-8 flex flex-wrap gap-3">
+        <a href={SITE.bookingUrl} class="btn btn-primary plausible-event-name=Booking+Click" data-goal="booking" rel="noopener">{SITE.cta.heroPrimary}</a>
+        <a href={utm(SITE.newsletter.url)} class="btn btn-secondary plausible-event-name=Newsletter+Click" rel="noopener">{SITE.cta.heroSecondary}</a>
+      </p>
+    </div>
+  </section>
+
+  <section aria-label="Proof" class="border-b border-line bg-panel">
+    <div class="wrap grid gap-6 py-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <p class="stat"><a href={utm(SITE.github.listUrl)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{gh.stars.toLocaleString('en-US')} ★</a></p>
+        <p class="stat-label mt-1">GitHub stars, awesome-MLSecOps</p>
+      </div>
+      <div>
+        <p class="stat">{gh.contributors}</p>
+        <p class="stat-label mt-1">Contributors to the list</p>
+      </div>
+      <div>
+        <p class="stat"><a href={utm(SITE.newsletter.url)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=Newsletter+Click">{nl.count}</a></p>
+        <p class="stat-label mt-1">Newsletter issues published</p>
+      </div>
+      <div>
+        <p class="stat"><a href="/readiness" class="text-ink no-underline hover:underline">{readiness.length}</a></p>
+        <p class="stat-label mt-1">Frameworks mapped to controls</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap pt-10"><CtaBlock id="home-cta" /></div>
+
+  <section class="wrap py-14" aria-labelledby="services-h">
+    <p class="kicker">Services</p>
+    <h2 id="services-h" class="mt-2">Three fixed-scope engagements</h2>
+    <p class="muted mt-2 max-w-prose">Each one ends with artifacts your engineers can merge and your auditors can read. Quoted after a 30-minute call; no hourly rates.</p>
+    <div class="mt-8 grid gap-4 md:grid-cols-3">
+      {services.map((s, i) => <ServiceCard service={s} index={i + 1} />)}
+    </div>
+    <p class="mt-6"><a href="/services" class="mono text-sm">Compare all services →</a></p>
+  </section>
+
+  <section class="wrap py-14" aria-labelledby="lanes-h">
+    <p class="kicker">Focus</p>
+    <h2 id="lanes-h" class="mt-2">Where the incidents actually are</h2>
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      <div class="panel p-5">
+        <h3 class="mono text-sm">Model supply chain</h3>
+        <p class="muted mt-2 text-sm">Pickle deserialization still executes code on load. JFrog found about a hundred malicious models on Hugging Face in February 2024; PyTorch 2.6 changed the <code>torch.load</code> default, and CVE-2025-32434 showed the flag alone is not the control. Signing, provenance and format policy are.</p>
+      </div>
+      <div class="panel p-5">
+        <h3 class="mono text-sm">Prompt injection</h3>
+        <p class="muted mt-2 text-sm">Any untrusted text that reaches a model is an instruction channel. Documents, web pages, tickets and tool results have all been used to exfiltrate data through rendered links and outbound tool calls. OWASP lists it first in the Top 10 for LLM Applications for a reason.</p>
+      </div>
+      <div class="panel p-5">
+        <h3 class="mono text-sm">Agentic and MCP security</h3>
+        <p class="muted mt-2 text-sm">Agents combine private data, untrusted content and outbound channels in one session. MCP servers add tools with their own permissions and their own descriptions, which the model trusts. The <a href="/data">Agentic Attack Index</a> tracks the disclosed incidents.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap py-14" aria-labelledby="notes-h">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="kicker">Case notes</p>
+        <h2 id="notes-h" class="mt-2">Recent engagements, anonymized</h2>
+      </div>
+      <a href="/case-notes" class="mono text-sm">All case notes →</a>
+    </div>
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      {notes.slice(0, 3).map((n) => <CaseNoteCard note={n} />)}
+    </div>
+  </section>
+
+  <section class="wrap py-14" aria-labelledby="readiness-h">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="kicker">Readiness</p>
+        <h2 id="readiness-h" class="mt-2">Framework obligations mapped to controls</h2>
+      </div>
+      <a href="/readiness" class="mono text-sm">Readiness hub →</a>
+    </div>
+    <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {readiness.map((r) => (
+        <li class="panel p-4">
+          <a href={`/readiness/${r.id}`} class="font-semibold text-ink no-underline hover:underline">{r.data.shortTitle}</a>
+          <p class="muted mt-1 text-sm">{r.data.summary}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="wrap py-14" aria-labelledby="nl-h">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="kicker">Newsletter</p>
+        <h2 id="nl-h" class="mt-2">Latest from The MLSecOps Hacker</h2>
+      </div>
+      <a href="/newsletter" class="mono text-sm">Newsletter page →</a>
+    </div>
+    <ul class="mt-6 divide-y divide-line border-y border-line">
+      {nl.issues.slice(0, 3).map((i) => (
+        <li class="flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:gap-6">
+          <time datetime={i.date} class="mono text-xs muted sm:w-28 sm:flex-none">{fmtDate(i.date)}</time>
+          <div>
+            <a href={utm(i.url)} rel="noopener" class="font-semibold text-ink plausible-event-name=Newsletter+Click">{i.title}</a>
+            {i.summary && <p class="muted mt-1 text-sm">{i.summary}</p>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="wrap py-14 grid gap-10 lg:grid-cols-[1fr_1fr]">
+    <Faq items={faq} heading="Questions people ask before booking" id="home-faq" />
+    <div class="panel p-6 self-start">
+      <p class="kicker">Elsewhere</p>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li><a href={utm(SITE.github.listUrl)} rel="noopener" class="plausible-event-name=GitHub+Click">awesome-MLSecOps on GitHub</a> <span class="muted">: the curated list, moving to the {SITE.github.orgName} organization</span></li>
+        <li><a href={SITE.social.awesome} rel="noopener">awesomemlsecops.com</a> <span class="muted">: tools, resources and the MLSecOps glossary</span></li>
+        <li><a href="/about">About Riccardo Biosas</a> <span class="muted">: the security engineer behind the practice</span></li>
+        <li><a href="/blog">Blog</a> <span class="muted">: announcements and data releases</span></li>
+        <li><a href="/contact">Contact</a> <span class="muted">: booking, email and a short form</span></li>
+      </ul>
+    </div>
+  </section>
+</Base>
