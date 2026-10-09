@@ -66,6 +66,8 @@ export interface OrgRepo {
   topics: string[];
   pushedAt: string;
   fork: boolean;
+  /** Commits on the default branch; 0 for an empty repository. */
+  commits: number;
 }
 export interface OrgRepos {
   repos: OrgRepo[];
@@ -75,10 +77,32 @@ export interface OrgRepos {
 const ORG_CACHE = cachePath('github-org.json');
 
 /**
- * Public, non-archived repositories of the MLSecOpsHub organization, used by
- * the holding landing page. Same fetch-once, cache-on-success policy as
- * getGitHubStats. The awesome-MLSecOps list is pinned first; the rest are
- * ordered by last push.
+ * Number of commits on the default branch, from the Link header of a
+ * one-per-page listing. GitHub answers 409 for a repository with no commits.
+ * Any other failure (typically an unauthenticated rate limit) returns the
+ * previously cached value, or -1 when there is none, so a transient API error
+ * never hides a repository that has content.
+ */
+async function countCommits(fullName: string, cached: number | undefined): Promise<number> {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${fullName}/commits?per_page=1`, { headers: headers() });
+    if (res.status === 409) return 0;
+    if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+    const m = (res.headers.get('link') ?? '').match(/page=(\d+)>; rel="last"/);
+    if (m) return Number(m[1]);
+    return ((await res.json()) as unknown[]).length;
+  } catch (err) {
+    console.warn(`[github] commit count for ${fullName} unavailable: ${(err as Error).message}`);
+    return cached ?? -1;
+  }
+}
+
+/**
+ * Public, non-archived repositories of the MLSecOpsHub organization that have
+ * at least one commit, used by the holding landing page and llms.txt. Empty
+ * repositories (no commits) are dropped. Same fetch-once, cache-on-success
+ * policy as getGitHubStats. The awesome-MLSecOps list is pinned first; the
+ * rest are ordered by last push.
  */
 export const getOrgRepos = memoize(async (): Promise<OrgRepos> => {
   const org = SITE.github.orgName;
@@ -86,9 +110,11 @@ export const getOrgRepos = memoize(async (): Promise<OrgRepos> => {
     const res = await fetch(`https://api.github.com/orgs/${org}/repos?per_page=100&type=public&sort=pushed`, { headers: headers() });
     if (!res.ok) throw new Error(`GitHub API ${res.status}`);
     const json = (await res.json()) as Array<Record<string, unknown>>;
-    const repos: OrgRepo[] = json
-      .filter((r) => !r.archived && !r.private)
-      .map((r) => ({
+    const previous = new Map(((await readCache<OrgRepos>(ORG_CACHE))?.repos ?? []).map((r) => [r.name, r.commits]));
+    const listed = json.filter((r) => !r.archived && !r.private);
+    const commits = await Promise.all(listed.map((r) => countCommits(String(r.full_name), previous.get(String(r.name)))));
+    const repos: OrgRepo[] = listed
+      .map((r, i) => ({
         name: String(r.name),
         url: String(r.html_url),
         description: typeof r.description === 'string' ? r.description.trim() : '',
@@ -98,7 +124,9 @@ export const getOrgRepos = memoize(async (): Promise<OrgRepos> => {
         topics: Array.isArray(r.topics) ? (r.topics as string[]) : [],
         pushedAt: String(r.pushed_at),
         fork: Boolean(r.fork),
+        commits: commits[i],
       }))
+      .filter((r) => r.commits !== 0)
       .sort((a, b) => {
         const pin = (x: OrgRepo) => (x.name.toLowerCase() === 'awesome-mlsecops' ? 0 : 1);
         return pin(a) - pin(b) || b.pushedAt.localeCompare(a.pushedAt);

@@ -9,7 +9,8 @@
       "stars": 0,
       "topics": [],
       "pushedAt": "2026-09-02T07:15:30Z",
-      "fork": true
+      "fork": true,
+      "commits": 130
     },
     {
       "name": "rogue-agents-watch",
@@ -31,7 +32,8 @@
         "threat-intelliegence"
       ],
       "pushedAt": "2026-10-09T18:13:14Z",
-      "fork": false
+      "fork": false,
+      "commits": 23
     },
     {
       "name": "agentic-attack-index",
@@ -55,7 +57,8 @@
         "threat-intelligence"
       ],
       "pushedAt": "2026-10-09T17:46:42Z",
-      "fork": false
+      "fork": false,
+      "commits": 35
     },
     {
       "name": "agentic-access-control",
@@ -66,7 +69,8 @@
       "stars": 0,
       "topics": [],
       "pushedAt": "2026-10-09T09:02:36Z",
-      "fork": false
+      "fork": false,
+      "commits": 21
     },
     {
       "name": "damn-vulnerable-skills",
@@ -89,18 +93,8 @@
         "vulnerability-research"
       ],
       "pushedAt": "2026-09-11T13:38:21Z",
-      "fork": false
-    },
-    {
-      "name": "world-models-security",
-      "url": "https://github.com/MLSecOpsHub/world-models-security",
-      "description": "",
-      "homepage": "",
-      "language": "",
-      "stars": 0,
-      "topics": [],
-      "pushedAt": "2026-09-02T09:32:28Z",
-      "fork": false
+      "fork": false,
+      "commits": 2
     },
     {
       "name": "provenance-engineering",
@@ -111,8 +105,9 @@
       "stars": 0,
       "topics": [],
       "pushedAt": "2026-08-30T08:03:31Z",
-      "fork": false
+      "fork": false,
+      "commits": 1
     }
   ],
-  "fetchedAt": "2026-10-09T18:17:40.605Z"
+  "fetchedAt": "2026-10-09T18:26:51.932Z"
 }

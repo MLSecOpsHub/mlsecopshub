@@ -4,33 +4,100 @@
  * (src/config/holding.mjs). Lists the public repositories of the MLSecOpsHub
  * GitHub organization and advertises The MLSecOps Hacker newsletter. No
  * services, no booking, no contact form.
+ *
+ * Answer-engine conventions: the first paragraph states what MLSecOpsHub is
+ * in one sentence; each section opens with a self-contained passage; the
+ * "What is MLSecOps?" definition is quotable on its own; the FAQ is mirrored
+ * as FAQPage JSON-LD; the project list is an ItemList of SoftwareSourceCode
+ * entries (the index as a Dataset) and the newsletter a Periodical.
  */
 import Base from '../../layouts/Base.astro';
+import Faq from '../Faq.astro';
 import NewsletterForm from '../NewsletterForm.astro';
 import { SITE, utm } from '../../config/site';
 import { fmtDate } from '../../lib/content';
-import { getGitHubStats, getOrgRepos } from '../../lib/github';
+import { getGitHubStats, getOrgRepos, type OrgRepo } from '../../lib/github';
 import { getNewsletter } from '../../lib/substack';
-import { webPage } from '../../lib/jsonld';
+import { webPage, faqPage, ORG_ID, PERSON_ID } from '../../lib/jsonld';
+import { lastmodFor } from '../../lib/routes-lastmod.mjs';
 
-const title = 'MLSecOpsHub: Open-Source MLSecOps and AI Security';
+const title = 'MLSecOpsHub: Open-Source MLSecOps and AI Security Tools';
 const description =
-  'MLSecOpsHub builds open-source tooling, datasets and research for MLSecOps and AI security on GitHub and publishes The MLSecOps Hacker newsletter.';
+  'MLSecOpsHub builds open-source MLSecOps and AI security tooling, datasets and research on GitHub and publishes The MLSecOps Hacker newsletter on Substack.';
 const [gh, org, nl] = await Promise.all([getGitHubStats(), getOrgRepos(), getNewsletter()]);
+
 const isList = (name: string) => name.toLowerCase() === 'awesome-mlsecops';
-const stars = (r: { name: string; stars: number }) => (isList(r.name) ? Math.max(r.stars, gh.stars) : r.stars);
+const isIndex = (name: string) => name.toLowerCase() === 'agentic-attack-index';
+const stars = (r: OrgRepo) => (isList(r.name) ? Math.max(r.stars, gh.stars) : r.stars);
+const CC_BY = 'https://creativecommons.org/licenses/by/4.0/';
+const modified = lastmodFor('/')?.toISOString();
+
+const whatIsMlsecops =
+  'MLSecOps is the practice of applying security engineering to the machine learning lifecycle: training data, model artifacts, pipelines, deployment, and the LLM applications and agents built on top. It extends DevSecOps with AI-specific threats such as model supply-chain attacks through unsafe serialization, prompt injection, and over-privileged agents and MCP tools.';
+
+const faq = [
+  {
+    q: 'What is MLSecOpsHub?',
+    a: `MLSecOpsHub is a GitHub organization and newsletter founded by security engineer Riccardo Biosas. It publishes open-source tooling, datasets and research for MLSecOps and AI security, including the <a href="${utm(SITE.github.listUrl)}" rel="noopener">awesome-MLSecOps</a> list, the Agentic Attack Index dataset and <a href="${utm(SITE.newsletter.url)}" rel="noopener">The MLSecOps Hacker</a> newsletter.`,
+  },
+  {
+    q: 'What is MLSecOps?',
+    a: `${whatIsMlsecops} The reference explainer is <a href="${utm(SITE.newsletter.whatIsMlsecops)}" rel="noopener">What is MLSecOps? on The MLSecOps Hacker</a>.`,
+  },
+  {
+    q: 'What is the Agentic Attack Index?',
+    a: `The Agentic Attack Index is an open, source-linked dataset of documented cyberattacks executed or orchestrated by AI agents, including prompt injection and MCP incidents, with every field cited to a primary source. It is published under CC BY 4.0 in the <a href="${utm(`${SITE.github.org}/agentic-attack-index`)}" rel="noopener">agentic-attack-index</a> repository and browsable through Rogue Agent Watch.`,
+  },
+  {
+    q: 'How do I follow MLSecOpsHub?',
+    a: `Star or watch the repositories on <a href="${utm(SITE.github.org)}" rel="noopener">GitHub</a>, subscribe free to <a href="${utm(SITE.newsletter.url)}" rel="noopener">The MLSecOps Hacker</a> on Substack (every two weeks), or follow <a href="${SITE.social.x}" rel="noopener">@MLSecOpsHacker on X</a>. Machine-readable summaries are in <a href="/llms.txt">llms.txt</a>.`,
+  },
+];
+
+const projectItem = (r: OrgRepo, i: number) => ({
+  '@type': 'ListItem',
+  position: i + 1,
+  item: {
+    '@type': isIndex(r.name) ? 'Dataset' : 'SoftwareSourceCode',
+    '@id': `${r.url}#${isIndex(r.name) ? 'dataset' : 'code'}`,
+    name: r.name,
+    url: r.homepage || r.url,
+    codeRepository: r.url,
+    description: r.description || undefined,
+    programmingLanguage: r.language || undefined,
+    keywords: r.topics.length ? r.topics.join(', ') : undefined,
+    dateModified: r.pushedAt,
+    author: { '@id': ORG_ID },
+    maintainer: { '@id': PERSON_ID },
+    license: isIndex(r.name) ? CC_BY : undefined,
+    isAccessibleForFree: true,
+  },
+});
+
 const graph = [
-  webPage('/', title, description),
+  { ...webPage('/', title, description), dateModified: modified, mainEntity: { '@id': ORG_ID } },
   {
     '@type': 'ItemList',
     '@id': `${SITE.url}/#projects`,
-    name: `Open-source projects of the ${SITE.github.orgName} GitHub organization`,
-    itemListElement: org.repos.map((r, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      item: { '@type': 'SoftwareSourceCode', name: r.name, codeRepository: r.url, description: r.description || undefined, programmingLanguage: r.language || undefined, url: r.homepage || r.url },
-    })),
+    name: `Open-source MLSecOps and AI security projects of the ${SITE.github.orgName} GitHub organization`,
+    url: SITE.github.org,
+    numberOfItems: org.repos.length,
+    itemListOrder: 'https://schema.org/ItemListOrderAscending',
+    itemListElement: org.repos.map(projectItem),
   },
+  {
+    '@type': 'Periodical',
+    '@id': `${SITE.newsletter.url}/#periodical`,
+    name: SITE.newsletter.name,
+    url: SITE.newsletter.url,
+    description: 'Biweekly newsletter on AI security, MLSecOps and AI governance: model supply-chain attacks, prompt injection, agent and MCP security, and the EU AI Act for engineering teams.',
+    inLanguage: 'en',
+    isAccessibleForFree: true,
+    publisher: { '@id': ORG_ID },
+    author: { '@id': PERSON_ID },
+    about: ['MLSecOps', 'AI security', 'prompt injection', 'model supply chain security', 'agentic AI security', 'EU AI Act'],
+  },
+  faqPage(faq, '/'),
 ];
 ---
 <Base {title} {description} path="/" graph={graph}>
@@ -39,7 +106,7 @@ const graph = [
       <p class="kicker">MLSecOpsHub · mlsecopshub.com</p>
       <h1 class="mt-4 max-w-4xl">MLSecOps and AI security, built in the open</h1>
       <p class="answer mt-6">
-        <strong>MLSecOpsHub</strong> is the GitHub organization and newsletter of security engineer Riccardo Biosas: open-source tooling, datasets and research for securing ML pipelines, LLM applications and AI agents, and <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">The MLSecOps Hacker</a>, which covers the same ground on Substack every two weeks.
+        <strong>MLSecOpsHub</strong> is the GitHub organization and newsletter of security engineer Riccardo Biosas. It publishes open-source MLSecOps and AI security tooling, datasets and research for securing ML pipelines, LLM applications and AI agents: the <a href={utm(SITE.github.listUrl)} rel="noopener" class="plausible-event-name=GitHub+Click">awesome-MLSecOps</a> list ({gh.stars.toLocaleString('en-US')} GitHub stars, {gh.contributors} contributors), the Agentic Attack Index dataset, and <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">The MLSecOps Hacker</a>, a free newsletter on Substack every two weeks.
       </p>
       <p class="mt-8 flex flex-wrap gap-3">
         <a href={utm(SITE.github.org)} class="btn btn-primary plausible-event-name=GitHub+Click" rel="noopener">Projects on GitHub</a>
@@ -48,14 +115,36 @@ const graph = [
     </div>
   </section>
 
+  <section aria-label="Proof" class="border-b border-line bg-panel">
+    <div class="wrap grid gap-6 py-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <p class="stat"><a href={utm(SITE.github.listUrl)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{gh.stars.toLocaleString('en-US')} ★</a></p>
+        <p class="stat-label mt-1">GitHub stars, awesome-MLSecOps</p>
+      </div>
+      <div>
+        <p class="stat">{gh.contributors}</p>
+        <p class="stat-label mt-1">Contributors to the list</p>
+      </div>
+      <div>
+        <p class="stat"><a href={utm(SITE.github.org)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{org.repos.length}</a></p>
+        <p class="stat-label mt-1">Open-source repositories</p>
+      </div>
+      <div>
+        <p class="stat"><a href={utm(SITE.newsletter.url)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=Newsletter+Click">{nl.count}</a></p>
+        <p class="stat-label mt-1">Newsletter issues published</p>
+      </div>
+    </div>
+  </section>
+
   <section class="wrap py-14" aria-labelledby="projects-h">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
         <p class="kicker">GitHub</p>
-        <h2 id="projects-h" class="mt-2">Projects under the {SITE.github.orgName} organization</h2>
+        <h2 id="projects-h" class="mt-2">Open-source MLSecOps and AI security projects</h2>
       </div>
       <a href={utm(SITE.github.org)} rel="noopener" class="mono text-sm plausible-event-name=GitHub+Click">github.com/{SITE.github.orgName} →</a>
     </div>
+    <p class="muted mt-3 max-w-prose">Every public repository of the {SITE.github.orgName} organization with at least one commit, read from the GitHub API at build time: a curated tools list, an incident dataset and its dashboard, and vulnerable-by-design labs for AI agent security.</p>
     <ul class="mt-6 grid gap-4 md:grid-cols-2">
       {org.repos.map((r) => (
         <li class="panel p-5 flex flex-col gap-2">
@@ -63,23 +152,35 @@ const graph = [
             <a href={utm(r.url)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{r.name}</a>
           </h3>
           <p class="muted text-sm flex-1">{r.description || 'Early-stage repository; no description published yet.'}</p>
+          {r.topics.length > 0 && (
+            <ul class="flex flex-wrap gap-1.5" aria-label={`Topics of ${r.name}`}>
+              {r.topics.slice(0, 6).map((t) => <li class="mono text-[0.68rem] rounded-sm border border-line px-1.5 py-0.5 text-muted">{t}</li>)}
+            </ul>
+          )}
           <p class="mono text-xs muted flex flex-wrap gap-x-3 gap-y-1">
             {r.language && <span>{r.language}</span>}
             {stars(r) > 0 && <span>{stars(r).toLocaleString('en-US')} ★</span>}
+            {isList(r.name) && gh.forks > 0 && <span>{gh.forks.toLocaleString('en-US')} forks</span>}
             <span>Updated <time datetime={r.pushedAt}>{fmtDate(r.pushedAt)}</time></span>
             {r.homepage && <a href={r.homepage} rel="noopener">Website</a>}
           </p>
         </li>
       ))}
     </ul>
-    <p class="mono mt-4 text-xs muted">Read from the GitHub API at build time. {org.repos.length} public repositories.</p>
+  </section>
+
+  <section class="wrap py-14" aria-labelledby="def-h">
+    <p class="kicker">Definition</p>
+    <h2 id="def-h" class="mt-2">What is MLSecOps?</h2>
+    <p class="answer mt-4">{whatIsMlsecops}</p>
+    <p class="muted mt-3 max-w-prose text-sm">Read the reference explainer, <a href={utm(SITE.newsletter.whatIsMlsecops)} rel="noopener" class="plausible-event-name=Newsletter+Click">What is MLSecOps?</a>, on The MLSecOps Hacker, and browse tools by category on <a href={SITE.social.awesome} rel="noopener">awesomemlsecops.com</a>.</p>
   </section>
 
   <section class="wrap py-14 grid gap-10 lg:grid-cols-[1fr_1fr]" aria-labelledby="nl-h">
     <div>
       <p class="kicker">Newsletter</p>
-      <h2 id="nl-h" class="mt-2">The MLSecOps Hacker</h2>
-      <p class="muted mt-3 max-w-prose">AI security, MLSecOps and AI governance every two weeks on Substack, for CISOs, security engineers and ML engineers: model supply-chain attacks, prompt injection, agent and MCP security, and what the EU AI Act asks of engineering teams. Free. {nl.count} issues so far.</p>
+      <h2 id="nl-h" class="mt-2">The MLSecOps Hacker: the AI security newsletter</h2>
+      <p class="muted mt-3 max-w-prose">The MLSecOps Hacker is the free biweekly newsletter of MLSecOpsHub on Substack, written by Riccardo Biosas for CISOs, security engineers and ML engineers. It covers model supply-chain attacks, prompt injection, agent and MCP security, and what the EU AI Act asks of engineering teams. {nl.count} issues published.</p>
       <div class="mt-6 max-w-xl"><NewsletterForm id="home-nl" /></div>
       <p class="mono mt-3 text-xs muted">Subscribing sends your address to Substack only. Or read the <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">archive</a> without subscribing.</p>
     </div>
@@ -93,6 +194,20 @@ const graph = [
             {i.summary && <p class="muted mt-1 text-sm">{i.summary}</p>}
           </li>
         ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap py-14 grid gap-10 lg:grid-cols-[1fr_1fr]">
+    <Faq items={faq} heading="Questions people ask about MLSecOpsHub" id="home-faq" />
+    <div class="panel p-6 self-start">
+      <p class="kicker">Elsewhere</p>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li><a href={utm(SITE.github.org)} rel="me noopener" class="plausible-event-name=GitHub+Click">github.com/{SITE.github.orgName}</a> <span class="muted">: the organization and all repositories</span></li>
+        <li><a href={SITE.social.awesome} rel="noopener">awesomemlsecops.com</a> <span class="muted">: tools, resources and the MLSecOps glossary</span></li>
+        <li><a href={utm(SITE.social.substack)} rel="me noopener" class="plausible-event-name=Newsletter+Click">themlsecopshacker.com</a> <span class="muted">: newsletter archive on Substack</span></li>
+        <li><a href={SITE.social.x} rel="me noopener">@MLSecOpsHacker on X</a> <span class="muted">: short-form analysis</span></li>
+        <li><a href="/llms.txt">llms.txt</a> <span class="muted">: a plain-text summary of this site for AI assistants</span></li>
       </ul>
     </div>
   </section>

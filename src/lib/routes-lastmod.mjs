@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 export const STATIC_LASTMOD = {
-  '/': '2026-09-08',
+  '/': '2026-10-10',
   '/services': '2026-09-08',
   '/readiness': '2026-09-08',
   '/case-notes': '2026-09-08',

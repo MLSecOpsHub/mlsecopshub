@@ -2,28 +2,32 @@ import type { APIRoute } from 'astro';
 import { SITE } from '../config/site';
 import { HOLDING_PAGE } from '../config/holding.mjs';
 import { getServices, getReadiness, getCaseNotes, getPosts } from '../lib/content';
-import { getOrgRepos } from '../lib/github';
+import { getGitHubStats, getOrgRepos } from '../lib/github';
+import { getNewsletter } from '../lib/substack';
 
 const TEXT = { headers: { 'Content-Type': 'text/plain; charset=utf-8' } };
 
 /** Holding mode: the organization, its public repositories and the newsletter. No services. */
 async function holding(): Promise<Response> {
-  const org = await getOrgRepos();
+  const [org, gh, nl] = await Promise.all([getOrgRepos(), getGitHubStats(), getNewsletter()]);
   const lines = [
     `# ${SITE.name}`,
     '',
     `> ${SITE.description}`,
     '',
-    `MLSecOpsHub is the GitHub organization and newsletter of Riccardo Biosas, security engineer. It publishes open-source tooling, datasets and research for securing ML pipelines, LLM applications and AI agents (model supply-chain security, prompt injection, agentic and Model Context Protocol security). The MLSecOps Hacker newsletter on Substack covers the same ground every two weeks.`,
+    `MLSecOpsHub is the GitHub organization and newsletter of Riccardo Biosas, security engineer. It publishes open-source tooling, datasets and research for securing ML pipelines, LLM applications and AI agents (model supply-chain security, prompt injection, agentic and Model Context Protocol security). The awesome-MLSecOps list has ${gh.stars} GitHub stars and ${gh.contributors} contributors. The MLSecOps Hacker newsletter on Substack covers the same ground every two weeks and has published ${nl.count} issues.`,
     '',
-    '## GitHub projects',
+    'MLSecOps is the practice of applying security engineering to the machine learning lifecycle: training data, model artifacts, pipelines, deployment, and the LLM applications and agents built on top. It extends DevSecOps with AI-specific threats such as model supply-chain attacks through unsafe serialization, prompt injection, and over-privileged agents and MCP tools.',
+    '',
+    '## GitHub projects (public repositories with at least one commit)',
     '',
     `- Organization: ${SITE.github.org}`,
-    ...org.repos.map((r) => `- [${r.name}](${r.url})${r.description ? `: ${r.description}` : ''}${r.homepage ? ` Website: ${r.homepage}` : ''}`),
+    ...org.repos.map((r) => `- [${r.name}](${r.url})${r.description ? `: ${r.description}` : ''}${r.topics.length ? ` Topics: ${r.topics.join(', ')}.` : ''}${r.homepage ? ` Website: ${r.homepage}` : ''}`),
     '',
     '## Newsletter',
     '',
     `- ${SITE.newsletter.name}: ${SITE.newsletter.url}`,
+    ...nl.issues.slice(0, 5).map((i) => `- [${i.title}](${i.url})${i.summary ? `: ${i.summary}` : ''}`),
     `- What is MLSecOps? ${SITE.newsletter.whatIsMlsecops}`,
     `- Feed: ${SITE.newsletter.feed}`,
     '',
