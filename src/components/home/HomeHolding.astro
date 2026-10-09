@@ -58,7 +58,7 @@ const faq = [
   },
   {
     q: 'How do I follow MLSecOpsHub?',
-    a: `Star or watch the repositories on <a href="${utm(SITE.github.org)}" rel="noopener">GitHub</a>, subscribe free to <a href="${utm(SITE.newsletter.url)}" rel="noopener">The MLSecOps Hacker</a> on Substack (every two weeks), or follow <a href="${SITE.social.x}" rel="noopener">@MLSecOpsHacker on X</a>. Machine-readable summaries are in <a href="/llms.txt">llms.txt</a>.`,
+    a: `Star or watch the repositories on <a href="${utm(SITE.github.org)}" rel="noopener">GitHub</a>, subscribe free to <a href="${utm(SITE.newsletter.url)}" rel="noopener">The MLSecOps Hacker</a> on Substack, or follow <a href="${SITE.social.x}" rel="noopener">@MLSecOpsHacker on X</a>. Machine-readable summaries are in <a href="/llms.txt">llms.txt</a>.`,
   },
 ];
 
@@ -98,7 +98,7 @@ const graph = [
     '@id': `${SITE.newsletter.url}/#periodical`,
     name: SITE.newsletter.name,
     url: SITE.newsletter.url,
-    description: 'Biweekly newsletter on AI security, MLSecOps and AI governance: model supply-chain attacks, prompt injection, agent and MCP security, and the EU AI Act for engineering teams.',
+    description: 'Newsletter on AI security, MLSecOps and AI governance: model supply-chain attacks, prompt injection, agent and MCP security, and the EU AI Act for engineering teams.',
     inLanguage: 'en',
     isAccessibleForFree: true,
     publisher: { '@id': ORG_ID },
@@ -122,7 +122,7 @@ const graph = [
           It was founded and is maintained by security engineer Riccardo Biosas. Its projects include the
           <a href={utm(SITE.github.listUrl)} rel="noopener" class="plausible-event-name=GitHub+Click">awesome-MLSecOps</a> list
           ({gh.stars.toLocaleString('en-US')} GitHub stars, {gh.contributors} contributors), the Agentic Attack Index dataset and
-          <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">The MLSecOps Hacker</a>, a free newsletter on Substack every two weeks.
+          <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">The MLSecOps Hacker</a>, a free newsletter on Substack.
         */}
       </p>
       <p class="mt-8 flex flex-wrap gap-3">
@@ -197,7 +197,7 @@ const graph = [
     <div>
       <p class="kicker">Newsletter</p>
       <h2 id="nl-h" class="mt-2">The MLSecOps Hacker: the AI security newsletter</h2>
-      <p class="muted mt-3 max-w-prose">The MLSecOps Hacker is the free biweekly newsletter of MLSecOpsHub on Substack, written for CISOs, security engineers and ML engineers.{/* withheld for now: "written by Riccardo Biosas" */} It covers model supply-chain attacks, prompt injection, agent and MCP security, and what the EU AI Act asks of engineering teams. {nl.count} issues published.</p>
+      <p class="muted mt-3 max-w-prose">The MLSecOps Hacker is the free newsletter of MLSecOpsHub on Substack, written for CISOs, security engineers and ML engineers.{/* withheld for now: "written by Riccardo Biosas" */} It covers model supply-chain attacks, prompt injection, agent and MCP security, and what the EU AI Act asks of engineering teams. {nl.count} issues published.</p>
       <div class="mt-6 max-w-xl"><NewsletterForm id="home-nl" /></div>
       <p class="mono mt-3 text-xs muted">Subscribing sends your address to Substack only. Or read the <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">archive</a> without subscribing.</p>
     </div>
