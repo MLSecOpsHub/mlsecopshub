@@ -4,20 +4,24 @@
  * variables (see .env.example) so that no secret or account-specific value
  * has to be committed.
  */
+import { HOLDING_PAGE } from './holding.mjs';
+
 const env = import.meta.env;
 
 export const SITE = {
   name: 'MLSecOpsHub',
   legalName: 'MLSecOpsHub',
   url: 'https://mlsecopshub.com',
-  tagline: 'MLSecOps and AI security consulting',
-  description:
-    'MLSecOpsHub is the MLSecOps and AI security practice behind The MLSecOps Hacker newsletter and the awesome-MLSecOps list. It delivers AI security assessments, MLSecOps pipeline hardening and AI governance readiness.',
+  tagline: HOLDING_PAGE ? 'Open-source MLSecOps and AI security' : 'MLSecOps and AI security consulting',
+  description: HOLDING_PAGE
+    ? 'MLSecOpsHub is the GitHub organization and newsletter behind open-source MLSecOps and AI security tooling, datasets and research: The MLSecOps Hacker newsletter, the awesome-MLSecOps list and the Agentic Attack Index.'
+    : 'MLSecOpsHub is the MLSecOps and AI security practice behind The MLSecOps Hacker newsletter and the awesome-MLSecOps list. It delivers AI security assessments, MLSecOps pipeline hardening and AI governance readiness.',
   locale: 'en',
   founder: {
     name: 'Riccardo Biosas',
     jobTitle: 'Security Engineer, Founder of MLSecOpsHub',
-    url: 'https://mlsecopshub.com/about',
+    /** The about page is not built in holding mode, so the founder URL falls back to the home page. */
+    url: HOLDING_PAGE ? 'https://mlsecopshub.com/' : 'https://mlsecopshub.com/about',
   },
   // ---- Placeholders (set in .env / host environment) -----------------------
   /** Cal.com (or equivalent) booking page. */
@@ -66,7 +70,7 @@ export const SITE = {
   utm: '?utm_source=mlsecopshub&utm_medium=website',
 } as const;
 
-export const NAV = [
+const FULL_NAV = [
   { href: '/services', label: 'Services' },
   { href: '/readiness', label: 'Readiness' },
   { href: '/case-notes', label: 'Case notes' },
@@ -74,6 +78,9 @@ export const NAV = [
   { href: '/newsletter', label: 'Newsletter' },
   { href: '/about', label: 'About' },
 ] as const;
+
+/** Holding mode has no internal sections to navigate to; the header shows outbound links only. */
+export const NAV: readonly { href: string; label: string }[] = HOLDING_PAGE ? [] : FULL_NAV;
 
 /** Append the UTM parameters to an outbound Substack or GitHub URL. */
 export function utm(url: string): string {

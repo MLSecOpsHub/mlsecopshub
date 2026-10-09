@@ -9,9 +9,7 @@
   },
   "urls": [
     "http://localhost:4321/",
-    "http://localhost:4321/services/ai-security-assessment",
-    "http://localhost:4321/readiness/eu-ai-act",
-    "http://localhost:4321/data",
-    "http://localhost:4321/contact"
+    "http://localhost:4321/privacy",
+    "http://localhost:4321/imprint"
   ]
 }

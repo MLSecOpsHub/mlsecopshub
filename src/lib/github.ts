@@ -55,3 +55,63 @@ export const getGitHubStats = memoize(async (): Promise<GitHubStats> => {
     throw err;
   }
 });
+
+export interface OrgRepo {
+  name: string;
+  url: string;
+  description: string;
+  homepage: string;
+  language: string;
+  stars: number;
+  topics: string[];
+  pushedAt: string;
+  fork: boolean;
+}
+export interface OrgRepos {
+  repos: OrgRepo[];
+  fetchedAt: string;
+}
+
+const ORG_CACHE = cachePath('github-org.json');
+
+/**
+ * Public, non-archived repositories of the MLSecOpsHub organization, used by
+ * the holding landing page. Same fetch-once, cache-on-success policy as
+ * getGitHubStats. The awesome-MLSecOps list is pinned first; the rest are
+ * ordered by last push.
+ */
+export const getOrgRepos = memoize(async (): Promise<OrgRepos> => {
+  const org = SITE.github.orgName;
+  try {
+    const res = await fetch(`https://api.github.com/orgs/${org}/repos?per_page=100&type=public&sort=pushed`, { headers: headers() });
+    if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+    const json = (await res.json()) as Array<Record<string, unknown>>;
+    const repos: OrgRepo[] = json
+      .filter((r) => !r.archived && !r.private)
+      .map((r) => ({
+        name: String(r.name),
+        url: String(r.html_url),
+        description: typeof r.description === 'string' ? r.description.trim() : '',
+        homepage: typeof r.homepage === 'string' ? r.homepage.trim() : '',
+        language: typeof r.language === 'string' ? r.language : '',
+        stars: Number(r.stargazers_count ?? 0),
+        topics: Array.isArray(r.topics) ? (r.topics as string[]) : [],
+        pushedAt: String(r.pushed_at),
+        fork: Boolean(r.fork),
+      }))
+      .sort((a, b) => {
+        const pin = (x: OrgRepo) => (x.name.toLowerCase() === 'awesome-mlsecops' ? 0 : 1);
+        return pin(a) - pin(b) || b.pushedAt.localeCompare(a.pushedAt);
+      });
+    const data: OrgRepos = { repos, fetchedAt: new Date().toISOString() };
+    await writeCache(ORG_CACHE, data);
+    return data;
+  } catch (err) {
+    const cached = await readCache<OrgRepos>(ORG_CACHE);
+    if (cached) {
+      console.warn(`[github] using cached org repos from ${cached.fetchedAt}: ${(err as Error).message}`);
+      return cached;
+    }
+    throw err;
+  }
+});

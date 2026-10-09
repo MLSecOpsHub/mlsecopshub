@@ -4,8 +4,7 @@
       "staticDistDir": "./dist",
       "url": [
         "http://localhost/index.html",
-        "http://localhost/services/ai-security-assessment/index.html",
-        "http://localhost/readiness/eu-ai-act/index.html"
+        "http://localhost/privacy/index.html"
       ],
       "numberOfRuns": 2,
       "settings": {

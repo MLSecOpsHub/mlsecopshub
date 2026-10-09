@@ -1,0 +1,99 @@
+---
+/**
+ * Temporary minimalist landing page, shown while holding mode is on
+ * (src/config/holding.mjs). Lists the public repositories of the MLSecOpsHub
+ * GitHub organization and advertises The MLSecOps Hacker newsletter. No
+ * services, no booking, no contact form.
+ */
+import Base from '../../layouts/Base.astro';
+import NewsletterForm from '../NewsletterForm.astro';
+import { SITE, utm } from '../../config/site';
+import { fmtDate } from '../../lib/content';
+import { getGitHubStats, getOrgRepos } from '../../lib/github';
+import { getNewsletter } from '../../lib/substack';
+import { webPage } from '../../lib/jsonld';
+
+const title = 'MLSecOpsHub: Open-Source MLSecOps and AI Security';
+const description =
+  'MLSecOpsHub builds open-source tooling, datasets and research for MLSecOps and AI security on GitHub and publishes The MLSecOps Hacker newsletter.';
+const [gh, org, nl] = await Promise.all([getGitHubStats(), getOrgRepos(), getNewsletter()]);
+const isList = (name: string) => name.toLowerCase() === 'awesome-mlsecops';
+const stars = (r: { name: string; stars: number }) => (isList(r.name) ? Math.max(r.stars, gh.stars) : r.stars);
+const graph = [
+  webPage('/', title, description),
+  {
+    '@type': 'ItemList',
+    '@id': `${SITE.url}/#projects`,
+    name: `Open-source projects of the ${SITE.github.orgName} GitHub organization`,
+    itemListElement: org.repos.map((r, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: { '@type': 'SoftwareSourceCode', name: r.name, codeRepository: r.url, description: r.description || undefined, programmingLanguage: r.language || undefined, url: r.homepage || r.url },
+    })),
+  },
+];
+---
+<Base {title} {description} path="/" graph={graph}>
+  <section class="border-b border-line">
+    <div class="wrap py-16 md:py-24">
+      <p class="kicker">MLSecOpsHub · mlsecopshub.com</p>
+      <h1 class="mt-4 max-w-4xl">MLSecOps and AI security, built in the open</h1>
+      <p class="answer mt-6">
+        <strong>MLSecOpsHub</strong> is the GitHub organization and newsletter of security engineer Riccardo Biosas: open-source tooling, datasets and research for securing ML pipelines, LLM applications and AI agents, and <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">The MLSecOps Hacker</a>, which covers the same ground on Substack every two weeks.
+      </p>
+      <p class="mt-8 flex flex-wrap gap-3">
+        <a href={utm(SITE.github.org)} class="btn btn-primary plausible-event-name=GitHub+Click" rel="noopener">Projects on GitHub</a>
+        <a href={utm(SITE.newsletter.url)} class="btn btn-secondary plausible-event-name=Newsletter+Click" rel="noopener">{SITE.cta.heroSecondary}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap py-14" aria-labelledby="projects-h">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="kicker">GitHub</p>
+        <h2 id="projects-h" class="mt-2">Projects under the {SITE.github.orgName} organization</h2>
+      </div>
+      <a href={utm(SITE.github.org)} rel="noopener" class="mono text-sm plausible-event-name=GitHub+Click">github.com/{SITE.github.orgName} →</a>
+    </div>
+    <ul class="mt-6 grid gap-4 md:grid-cols-2">
+      {org.repos.map((r) => (
+        <li class="panel p-5 flex flex-col gap-2">
+          <h3 class="mono text-base">
+            <a href={utm(r.url)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{r.name}</a>
+          </h3>
+          <p class="muted text-sm flex-1">{r.description || 'Early-stage repository; no description published yet.'}</p>
+          <p class="mono text-xs muted flex flex-wrap gap-x-3 gap-y-1">
+            {r.language && <span>{r.language}</span>}
+            {stars(r) > 0 && <span>{stars(r).toLocaleString('en-US')} ★</span>}
+            <span>Updated <time datetime={r.pushedAt}>{fmtDate(r.pushedAt)}</time></span>
+            {r.homepage && <a href={r.homepage} rel="noopener">Website</a>}
+          </p>
+        </li>
+      ))}
+    </ul>
+    <p class="mono mt-4 text-xs muted">Read from the GitHub API at build time. {org.repos.length} public repositories.</p>
+  </section>
+
+  <section class="wrap py-14 grid gap-10 lg:grid-cols-[1fr_1fr]" aria-labelledby="nl-h">
+    <div>
+      <p class="kicker">Newsletter</p>
+      <h2 id="nl-h" class="mt-2">The MLSecOps Hacker</h2>
+      <p class="muted mt-3 max-w-prose">AI security, MLSecOps and AI governance every two weeks on Substack, for CISOs, security engineers and ML engineers: model supply-chain attacks, prompt injection, agent and MCP security, and what the EU AI Act asks of engineering teams. Free. {nl.count} issues so far.</p>
+      <div class="mt-6 max-w-xl"><NewsletterForm id="home-nl" /></div>
+      <p class="mono mt-3 text-xs muted">Subscribing sends your address to Substack only. Or read the <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">archive</a> without subscribing.</p>
+    </div>
+    <div>
+      <p class="kicker">Latest issues</p>
+      <ul class="mt-3 divide-y divide-line border-y border-line">
+        {nl.issues.slice(0, 4).map((i) => (
+          <li class="py-4">
+            <time datetime={i.date} class="mono text-xs muted">{fmtDate(i.date)}</time>
+            <p class="mt-1"><a href={utm(i.url)} rel="noopener" class="font-semibold text-ink plausible-event-name=Newsletter+Click">{i.title}</a></p>
+            {i.summary && <p class="muted mt-1 text-sm">{i.summary}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>

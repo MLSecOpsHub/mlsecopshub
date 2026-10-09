@@ -11,7 +11,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'sha256-Pd4Wpy7NaAztoqHchmC7rQGyCzColMk13xqOK3WjtXU=' 'sha256-d0BH8JJNfO+F3CMG/28cXNjrMveJ0Spd+bCGaUiQJBE=' https://plausible.io https://app.cal.com; style-src 'self' 'sha256-ppPKjgrX+Yev8d55X8l7dtbUPdkm5qHMNP8uVfWdYSs=' 'sha256-EYBjQ/MWwvnPW8SGSE7toYsR/ipXif+gZ1xnTW0lVpg=' https://app.cal.com; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://plausible.io https://app.cal.com https://api.cal.com; frame-src https://app.cal.com https://cal.com https://themlsecopshacker.com; form-action 'self' https://themlsecopshacker.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' https://plausible.io https://app.cal.com; style-src 'self' 'sha256-fikGlWvnFFlE9QtRqtzpS9L145uhw88yMh5FGaFR/os=' https://app.cal.com; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://plausible.io https://app.cal.com https://api.cal.com; frame-src https://app.cal.com https://cal.com https://themlsecopshacker.com; form-action 'self' https://themlsecopshacker.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
         },
         {
           "key": "Strict-Transport-Security",

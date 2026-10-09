@@ -1,8 +1,49 @@
 import type { APIRoute } from 'astro';
 import { SITE } from '../config/site';
+import { HOLDING_PAGE } from '../config/holding.mjs';
 import { getServices, getReadiness, getCaseNotes, getPosts } from '../lib/content';
+import { getOrgRepos } from '../lib/github';
+
+const TEXT = { headers: { 'Content-Type': 'text/plain; charset=utf-8' } };
+
+/** Holding mode: the organization, its public repositories and the newsletter. No services. */
+async function holding(): Promise<Response> {
+  const org = await getOrgRepos();
+  const lines = [
+    `# ${SITE.name}`,
+    '',
+    `> ${SITE.description}`,
+    '',
+    `MLSecOpsHub is the GitHub organization and newsletter of Riccardo Biosas, security engineer. It publishes open-source tooling, datasets and research for securing ML pipelines, LLM applications and AI agents (model supply-chain security, prompt injection, agentic and Model Context Protocol security). The MLSecOps Hacker newsletter on Substack covers the same ground every two weeks.`,
+    '',
+    '## GitHub projects',
+    '',
+    `- Organization: ${SITE.github.org}`,
+    ...org.repos.map((r) => `- [${r.name}](${r.url})${r.description ? `: ${r.description}` : ''}${r.homepage ? ` Website: ${r.homepage}` : ''}`),
+    '',
+    '## Newsletter',
+    '',
+    `- ${SITE.newsletter.name}: ${SITE.newsletter.url}`,
+    `- What is MLSecOps? ${SITE.newsletter.whatIsMlsecops}`,
+    `- Feed: ${SITE.newsletter.feed}`,
+    '',
+    '## Elsewhere',
+    '',
+    `- X: ${SITE.social.x}`,
+    `- Tools, resources and glossary: ${SITE.social.awesome}`,
+    '',
+    '## Optional',
+    '',
+    `- [Privacy](${SITE.url}/privacy)`,
+    `- [Imprint](${SITE.url}/imprint)`,
+    `- [Sitemap](${SITE.url}/sitemap-index.xml)`,
+    '',
+  ];
+  return new Response(lines.join('\n'), TEXT);
+}
 
 export const GET: APIRoute = async () => {
+  if (HOLDING_PAGE) return holding();
   const [services, readiness, notes, posts] = await Promise.all([getServices(), getReadiness(), getCaseNotes(), getPosts()]);
   const u = (p: string) => `${SITE.url}${p}`;
   const lines = [
@@ -53,5 +94,5 @@ export const GET: APIRoute = async () => {
     `- [Sitemap](${u('/sitemap-index.xml')})`,
     '',
   ];
-  return new Response(lines.join('\n'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+  return new Response(lines.join('\n'), TEXT);
 };

@@ -3,11 +3,16 @@
  * orphan check. Collection entries are appended at build time.
  */
 import { getServices, getReadiness, getCaseNotes, getPosts, noteTitle } from './content';
+import { HOLDING_PAGE } from '../config/holding.mjs';
 
 export interface RouteMeta { path: string; title: string; kicker: string; subtitle?: string; section: string }
 
+const HOME: RouteMeta = HOLDING_PAGE
+  ? { path: '/', title: 'MLSecOps and AI security, built in the open', kicker: 'MLSecOpsHub', subtitle: 'Open-source tooling and research on GitHub · The MLSecOps Hacker newsletter', section: 'Home' }
+  : { path: '/', title: 'MLSecOps and AI security for teams that ship models and agents', kicker: 'MLSecOpsHub', subtitle: 'AI security assessment · MLSecOps pipeline hardening · AI governance readiness', section: 'Home' };
+
 export const STATIC_ROUTES: RouteMeta[] = [
-  { path: '/', title: 'MLSecOps and AI security for teams that ship models and agents', kicker: 'MLSecOpsHub', subtitle: 'AI security assessment · MLSecOps pipeline hardening · AI governance readiness', section: 'Home' },
+  HOME,
   { path: '/services', title: 'MLSecOps consulting: three fixed-scope engagements', kicker: 'Services', subtitle: 'Quoted after a 30-minute call. Artifacts your engineers merge and your auditors read.', section: 'Services' },
   { path: '/readiness', title: 'AI governance readiness: obligations mapped to controls', kicker: 'Readiness', subtitle: 'EU AI Act · Cyber Resilience Act · NIST AI RMF · ISO/IEC 42001', section: 'Readiness' },
   { path: '/case-notes', title: 'Case notes: what an MLSecOps engagement changes', kicker: 'Case notes', subtitle: 'Context → Finding → Fix → Outcome. Anonymized composites.', section: 'Case notes' },

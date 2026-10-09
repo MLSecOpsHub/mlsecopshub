@@ -130,6 +130,12 @@ Body: an opening 40–60-word paragraph, then h2 sections **Context → Finding 
 
 `src/content/data/agentic-attack-index.md` holds the page copy, columns, FAQ and distribution URLs. Rows live in `data/agentic-attack-index.json` (validated by the `attackIndex` schema: `id`, `disclosed`, `product`, `vendor`, `vector`, `surface`, `impact`, `summary`, `source`, `sourceName`, `status`). Add an entry with a primary source, keep the array sorted by `disclosed` descending, and bump `updated` in the markdown file. See `data/README.md` for the contribution rules.
 
+## Holding mode (current)
+
+`src/config/holding.mjs` has `HOLDING_PAGE = true`. The build then ships only a minimalist home page (public repositories of the MLSecOpsHub GitHub organization, read from the GitHub API and cached in `src/data/cache/github-org.json`, plus The MLSecOps Hacker newsletter), `/privacy`, `/imprint`, `/404` and `/llms.txt`. `src/middleware.ts` answers every other route with an empty 404 so Astro skips it; Header, Footer, Head, the 404 page, JSON-LD and `llms.txt` render reduced variants. The full landing page lives in `src/components/home/HomeFull.astro` and nothing under `src/content` or `src/pages` was removed.
+
+To restore the full site: set `HOLDING_PAGE` to `false` (or build with `PUBLIC_HOLDING_PAGE=false`), put a service and a readiness URL back in `lighthouserc.json` and `.pa11yci.json`, run `npm run build` and commit the regenerated `vercel.json`.
+
 ## Deploy (Vercel)
 
 1. Import the repository in Vercel. Framework preset: Astro; build command `npm run build`; output `dist`. Node 24 (set in Project Settings → General).

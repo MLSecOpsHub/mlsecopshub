@@ -1,4 +1,5 @@
 import { SITE } from '../config/site';
+import { HOLDING_PAGE } from '../config/holding.mjs';
 
 export const ORG_ID = `${SITE.url}/#organization`;
 export const PERSON_ID = `${SITE.url}/#founder`;
@@ -25,7 +26,9 @@ export function organization(): Graph {
       'agentic AI security',
       'Model Context Protocol security',
     ],
-    contactPoint: { '@type': 'ContactPoint', contactType: 'sales', email: SITE.contactEmail, url: `${SITE.url}/contact`, availableLanguage: 'en' },
+    contactPoint: HOLDING_PAGE
+      ? { '@type': 'ContactPoint', contactType: 'general', email: SITE.contactEmail, availableLanguage: 'en' }
+      : { '@type': 'ContactPoint', contactType: 'sales', email: SITE.contactEmail, url: `${SITE.url}/contact`, availableLanguage: 'en' },
   };
 }
 
@@ -35,7 +38,7 @@ export function person(extra: Graph = {}): Graph {
     '@id': PERSON_ID,
     name: SITE.founder.name,
     jobTitle: 'Security Engineer',
-    url: `${SITE.url}/about`,
+    url: SITE.founder.url,
     worksFor: { '@id': ORG_ID },
     sameAs: [SITE.social.x, SITE.social.substack, SITE.github.listUrl, SITE.social.instagram, SITE.social.linkedin].filter(Boolean),
     knowsAbout: ['MLSecOps', 'AI security', 'application security', 'model supply chain security', 'prompt injection'],

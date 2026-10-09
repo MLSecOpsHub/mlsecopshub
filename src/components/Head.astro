@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../config/site';
+import { HOLDING_PAGE } from '../config/holding.mjs';
 interface Props {
   title: string;
   description: string;
@@ -33,8 +34,8 @@ const image = ogImage ?? `${SITE.url}/og${path === '/' ? '/home' : path}.png`;
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 <link rel="preload" href="/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="alternate" type="application/rss+xml" title="MLSecOpsHub blog" href="/blog/rss.xml" />
-<link rel="alternate" type="application/rss+xml" title="MLSecOpsHub case notes" href="/case-notes/rss.xml" />
+{!HOLDING_PAGE && <link rel="alternate" type="application/rss+xml" title="MLSecOpsHub blog" href="/blog/rss.xml" />}
+{!HOLDING_PAGE && <link rel="alternate" type="application/rss+xml" title="MLSecOpsHub case notes" href="/case-notes/rss.xml" />}
 <meta property="og:type" content={type} />
 <meta property="og:site_name" content={SITE.name} />
 <meta property="og:locale" content="en_US" />

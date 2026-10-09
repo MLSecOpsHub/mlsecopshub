@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { lastmodFor } from './src/lib/routes-lastmod.mjs';
+import { HOLDING_PAGE, isHoldingRoute } from './src/config/holding.mjs';
 
 export default defineConfig({
   site: 'https://mlsecopshub.com',
@@ -14,7 +15,10 @@ export default defineConfig({
   integrations: [
     sitemap({
       filenameBase: 'sitemap',
-      filter: (page) => !page.includes('/og/') && !page.includes('/contact/thanks'),
+      filter: (page) =>
+        !page.includes('/og/') &&
+        !page.includes('/contact/thanks') &&
+        (!HOLDING_PAGE || (isHoldingRoute(new URL(page).pathname) && !page.endsWith('/404'))),
       serialize: (item) => {
         const lastmod = lastmodFor(item.url);
         return lastmod ? { ...item, lastmod: lastmod.toISOString() } : item;
