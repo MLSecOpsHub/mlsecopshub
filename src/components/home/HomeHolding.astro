@@ -18,7 +18,7 @@ import { SITE, utm } from '../../config/site';
 import { fmtDate } from '../../lib/content';
 import { getGitHubStats, getOrgRepos, type OrgRepo } from '../../lib/github';
 import { getNewsletter } from '../../lib/substack';
-import { webPage, faqPage, ORG_ID, PERSON_ID } from '../../lib/jsonld';
+import { webPage, faqPage, ORG_ID } from '../../lib/jsonld';
 import { lastmodFor } from '../../lib/routes-lastmod.mjs';
 
 const title = 'MLSecOpsHub: Open-Source MLSecOps and AI Security Tools';
@@ -29,6 +29,8 @@ const [gh, org, nl] = await Promise.all([getGitHubStats(), getOrgRepos(), getNew
 const isList = (name: string) => name.toLowerCase() === 'awesome-mlsecops';
 const isIndex = (name: string) => name.toLowerCase() === 'agentic-attack-index';
 const stars = (r: OrgRepo) => (isList(r.name) ? Math.max(r.stars, gh.stars) : r.stars);
+/** Link the list through the organization's repository when it is listed there, not the personal upstream. */
+const listUrl = org.repos.find((r) => isList(r.name))?.url ?? SITE.github.listUrl;
 const CC_BY = 'https://creativecommons.org/licenses/by/4.0/';
 const modified = lastmodFor('/')?.toISOString();
 
@@ -38,7 +40,13 @@ const whatIsMlsecops =
 const faq = [
   {
     q: 'What is MLSecOpsHub?',
-    a: `MLSecOpsHub is a GitHub organization and newsletter founded by security engineer Riccardo Biosas. It publishes open-source tooling, datasets and research for MLSecOps and AI security, including the <a href="${utm(SITE.github.listUrl)}" rel="noopener">awesome-MLSecOps</a> list, the Agentic Attack Index dataset and <a href="${utm(SITE.newsletter.url)}" rel="noopener">The MLSecOps Hacker</a> newsletter.`,
+    // Withheld for now (founder and project mentions). Previous answer ending, to reinstate after the hub sentence:
+    //   It was founded and is maintained by security engineer Riccardo Biosas. Its projects include the
+    //   <a href="${utm(SITE.github.listUrl)}" rel="noopener">awesome-MLSecOps</a> list, the Agentic Attack Index dataset and
+    //   <a href="${utm(SITE.newsletter.url)}" rel="noopener">The MLSecOps Hacker</a> newsletter.
+    // Withheld for now (education and career hub), previously after the first sentence:
+    //   It also aims to be the central hub for education and career resources in the field: courses and learning material on AI security, AI governance and MLSecOps, the AI security job market, the certification landscape, and the conferences, events and meetups in the space.
+    a: `MLSecOpsHub is a GitHub organization and community building open-source MLSecOps and AI security tooling, datasets and research for securing ML pipelines, LLM applications, AI agents and autonomous AI architectures. Its projects are public on <a href="${utm(SITE.github.org)}" rel="noopener">GitHub</a> and its newsletter is <a href="${utm(SITE.newsletter.url)}" rel="noopener">The MLSecOps Hacker</a> on Substack.`,
   },
   {
     q: 'What is MLSecOps?',
@@ -68,7 +76,7 @@ const projectItem = (r: OrgRepo, i: number) => ({
     keywords: r.topics.length ? r.topics.join(', ') : undefined,
     dateModified: r.pushedAt,
     author: { '@id': ORG_ID },
-    maintainer: { '@id': PERSON_ID },
+    // maintainer: { '@id': PERSON_ID }, // withheld for now with the founder mention
     license: isIndex(r.name) ? CC_BY : undefined,
     isAccessibleForFree: true,
   },
@@ -94,7 +102,7 @@ const graph = [
     inLanguage: 'en',
     isAccessibleForFree: true,
     publisher: { '@id': ORG_ID },
-    author: { '@id': PERSON_ID },
+    // author: { '@id': PERSON_ID }, // withheld for now with the founder mention
     about: ['MLSecOps', 'AI security', 'prompt injection', 'model supply chain security', 'agentic AI security', 'EU AI Act'],
   },
   faqPage(faq, '/'),
@@ -106,7 +114,16 @@ const graph = [
       <p class="kicker">MLSecOpsHub · mlsecopshub.com</p>
       <h1 class="mt-4 max-w-4xl">MLSecOps and AI security, built in the open</h1>
       <p class="answer mt-6">
-        <strong>MLSecOpsHub</strong> is the GitHub organization and newsletter of security engineer Riccardo Biosas. It publishes open-source MLSecOps and AI security tooling, datasets and research for securing ML pipelines, LLM applications and AI agents: the <a href={utm(SITE.github.listUrl)} rel="noopener" class="plausible-event-name=GitHub+Click">awesome-MLSecOps</a> list ({gh.stars.toLocaleString('en-US')} GitHub stars, {gh.contributors} contributors), the Agentic Attack Index dataset, and <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">The MLSecOps Hacker</a>, a free newsletter on Substack every two weeks.
+        <strong>MLSecOpsHub</strong> is a GitHub organization and community building open-source MLSecOps and AI security tooling, datasets and research for securing ML pipelines, LLM applications, AI agents and autonomous AI architectures.
+        {/* Withheld for now (education and career hub):
+          It also aims to be the central hub for education and career resources in the field: courses and learning material on AI security, AI governance and MLSecOps, the AI security job market, the certification landscape, and the conferences, events and meetups in the space.
+        */}
+        {/* Withheld for now (founder and project mentions); reinstate by moving it back into the paragraph:
+          It was founded and is maintained by security engineer Riccardo Biosas. Its projects include the
+          <a href={utm(SITE.github.listUrl)} rel="noopener" class="plausible-event-name=GitHub+Click">awesome-MLSecOps</a> list
+          ({gh.stars.toLocaleString('en-US')} GitHub stars, {gh.contributors} contributors), the Agentic Attack Index dataset and
+          <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">The MLSecOps Hacker</a>, a free newsletter on Substack every two weeks.
+        */}
       </p>
       <p class="mt-8 flex flex-wrap gap-3">
         <a href={utm(SITE.github.org)} class="btn btn-primary plausible-event-name=GitHub+Click" rel="noopener">Projects on GitHub</a>
@@ -118,7 +135,7 @@ const graph = [
   <section aria-label="Proof" class="border-b border-line bg-panel">
     <div class="wrap grid gap-6 py-8 sm:grid-cols-2 lg:grid-cols-4">
       <div>
-        <p class="stat"><a href={utm(SITE.github.listUrl)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{gh.stars.toLocaleString('en-US')} ★</a></p>
+        <p class="stat"><a href={utm(listUrl)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{gh.stars.toLocaleString('en-US')} ★</a></p>
         <p class="stat-label mt-1">GitHub stars, awesome-MLSecOps</p>
       </div>
       <div>
@@ -144,7 +161,7 @@ const graph = [
       </div>
       <a href={utm(SITE.github.org)} rel="noopener" class="mono text-sm plausible-event-name=GitHub+Click">github.com/{SITE.github.orgName} →</a>
     </div>
-    <p class="muted mt-3 max-w-prose">Every public repository of the {SITE.github.orgName} organization with at least one commit, read from the GitHub API at build time: a curated tools list, an incident dataset and its dashboard, and vulnerable-by-design labs for AI agent security.</p>
+    <p class="muted mt-3 max-w-prose">Everything MLSecOpsHub builds lives in public repositories on GitHub: the awesome-MLSecOps list of open-source MLSecOps and AI security tools, the Agentic Attack Index of documented AI agent attacks with its Rogue Agent Watch dashboard, and vulnerable-by-design labs for practising AI agent security. Star a project to follow it, or open an issue to contribute.</p>
     <ul class="mt-6 grid gap-4 md:grid-cols-2">
       {org.repos.map((r) => (
         <li class="panel p-5 flex flex-col gap-2">
@@ -180,7 +197,7 @@ const graph = [
     <div>
       <p class="kicker">Newsletter</p>
       <h2 id="nl-h" class="mt-2">The MLSecOps Hacker: the AI security newsletter</h2>
-      <p class="muted mt-3 max-w-prose">The MLSecOps Hacker is the free biweekly newsletter of MLSecOpsHub on Substack, written by Riccardo Biosas for CISOs, security engineers and ML engineers. It covers model supply-chain attacks, prompt injection, agent and MCP security, and what the EU AI Act asks of engineering teams. {nl.count} issues published.</p>
+      <p class="muted mt-3 max-w-prose">The MLSecOps Hacker is the free biweekly newsletter of MLSecOpsHub on Substack, written for CISOs, security engineers and ML engineers.{/* withheld for now: "written by Riccardo Biosas" */} It covers model supply-chain attacks, prompt injection, agent and MCP security, and what the EU AI Act asks of engineering teams. {nl.count} issues published.</p>
       <div class="mt-6 max-w-xl"><NewsletterForm id="home-nl" /></div>
       <p class="mono mt-3 text-xs muted">Subscribing sends your address to Substack only. Or read the <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">archive</a> without subscribing.</p>
     </div>

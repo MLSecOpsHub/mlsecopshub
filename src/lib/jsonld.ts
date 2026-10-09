@@ -15,7 +15,7 @@ export function organization(): Graph {
     url: SITE.url,
     logo: { '@type': 'ImageObject', url: `${SITE.url}/logo.png`, width: 512, height: 512 },
     description: SITE.description,
-    founder: { '@id': PERSON_ID },
+    founder: HOLDING_PAGE ? undefined : { '@id': PERSON_ID },
     sameAs: [SITE.social.githubOrg, SITE.social.substack, SITE.social.x, SITE.social.instagram, SITE.social.awesome].filter(Boolean),
     knowsAbout: [
       'MLSecOps',

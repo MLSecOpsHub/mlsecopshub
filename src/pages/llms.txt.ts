@@ -15,7 +15,10 @@ async function holding(): Promise<Response> {
     '',
     `> ${SITE.description}`,
     '',
-    `MLSecOpsHub is the GitHub organization and newsletter of Riccardo Biosas, security engineer. It publishes open-source tooling, datasets and research for securing ML pipelines, LLM applications and AI agents (model supply-chain security, prompt injection, agentic and Model Context Protocol security). The awesome-MLSecOps list has ${gh.stars} GitHub stars and ${gh.contributors} contributors. The MLSecOps Hacker newsletter on Substack covers the same ground every two weeks and has published ${nl.count} issues.`,
+    // Withheld for now (education and career hub), previously after the focus areas: 'It also aims to be the central hub for education and career resources in the field: courses and learning material on AI security, AI governance and MLSecOps, the AI security job market, the certification landscape, and the conferences, events and meetups in the space.'
+    // Withheld for now (founder mention), previously after the focus areas: ' It was founded and is maintained by security engineer Riccardo Biosas.'
+    `MLSecOpsHub is a GitHub organization and community building open-source MLSecOps and AI security tooling, datasets and research for securing ML pipelines, LLM applications, AI agents and autonomous AI architectures (model supply-chain security, prompt injection, agentic and Model Context Protocol security). The awesome-MLSecOps list has ${gh.stars} GitHub stars and ${gh.contributors} contributors. The MLSecOps Hacker newsletter on Substack covers the same ground every two weeks and has published ${nl.count} issues.
+    `,
     '',
     'MLSecOps is the practice of applying security engineering to the machine learning lifecycle: training data, model artifacts, pipelines, deployment, and the LLM applications and agents built on top. It extends DevSecOps with AI-specific threats such as model supply-chain attacks through unsafe serialization, prompt injection, and over-privileged agents and MCP tools.',
     '',

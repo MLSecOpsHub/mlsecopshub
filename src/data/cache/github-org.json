@@ -31,9 +31,9 @@
         "rogue-agents",
         "threat-intelliegence"
       ],
-      "pushedAt": "2026-10-09T18:13:14Z",
+      "pushedAt": "2026-10-09T18:38:17Z",
       "fork": false,
-      "commits": 23
+      "commits": 25
     },
     {
       "name": "agentic-attack-index",
@@ -63,11 +63,26 @@
     {
       "name": "agentic-access-control",
       "url": "https://github.com/MLSecOpsHub/agentic-access-control",
-      "description": "",
+      "description": "Read-only, local-first dashboard showing what your AI agents (Claude Code, Gemini CLI, MCP servers) are actually allowed to do: permission rules with file provenance, MCP server inventory, sandbox & hook posture, risk findings, OWASP Agentic Top 10 threat scenarios, and config drift. No enforcement, no telemetry (for now).",
       "homepage": "",
       "language": "TypeScript",
       "stars": 0,
-      "topics": [],
+      "topics": [
+        "access-control",
+        "agentic-access",
+        "ai-agents",
+        "ai-agents-security",
+        "ai-observability",
+        "ai-threat",
+        "claude-code-security",
+        "gemini-cli",
+        "mcp-security",
+        "mlsecops",
+        "model-context-protocol",
+        "owasp",
+        "security-posture",
+        "threat-modeling"
+      ],
       "pushedAt": "2026-10-09T09:02:36Z",
       "fork": false,
       "commits": 21
@@ -109,5 +124,5 @@
       "commits": 1
     }
   ],
-  "fetchedAt": "2026-10-09T18:26:51.932Z"
+  "fetchedAt": "2026-10-09T19:16:42.511Z"
 }

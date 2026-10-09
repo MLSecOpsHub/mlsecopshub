@@ -1,9 +1,14 @@
 ---
-/** Renders a single @graph JSON-LD block. Organization and WebSite are always included. */
+/**
+ * Renders a single @graph JSON-LD block. Organization and WebSite are always
+ * included; the founder Person node is withheld in holding mode, where the
+ * copy carries no personal mention (src/config/holding.mjs).
+ */
 import { organization, website, person, type Graph } from '../lib/jsonld';
+import { HOLDING_PAGE } from '../config/holding.mjs';
 interface Props { graph: Graph[] }
 const { graph } = Astro.props;
-const data = { '@context': 'https://schema.org', '@graph': [organization(), person(), website(), ...graph] };
+const data = { '@context': 'https://schema.org', '@graph': [organization(), ...(HOLDING_PAGE ? [] : [person()]), website(), ...graph] };
 const json = JSON.stringify(data).replace(/</g, '\\u003c');
 ---
 <script type="application/ld+json" set:html={json} is:inline />

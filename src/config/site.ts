@@ -14,7 +14,9 @@ export const SITE = {
   url: 'https://mlsecopshub.com',
   tagline: HOLDING_PAGE ? 'Open-source MLSecOps and AI security' : 'MLSecOps and AI security consulting',
   description: HOLDING_PAGE
-    ? 'MLSecOpsHub is the GitHub organization and newsletter behind open-source MLSecOps and AI security tooling, datasets and research: The MLSecOps Hacker newsletter, the awesome-MLSecOps list and the Agentic Attack Index.'
+    ? 'MLSecOpsHub is a GitHub organization and community building open-source MLSecOps and AI security tooling, datasets and research for securing ML pipelines, LLM applications, AI agents and autonomous AI architectures. It publishes The MLSecOps Hacker newsletter.'
+    // Withheld for now (education and career hub), previously before the newsletter sentence: 'It also aims to be the central hub for education and career resources in the field: courses and learning material on AI security, AI governance and MLSecOps, the AI security job market, the certification landscape, and the conferences, events and meetups in the space.'
+    // Withheld for now (explicit project listing): ' It publishes The MLSecOps Hacker newsletter, the awesome-MLSecOps list and the Agentic Attack Index.'
     : 'MLSecOpsHub is the MLSecOps and AI security practice behind The MLSecOps Hacker newsletter and the awesome-MLSecOps list. It delivers AI security assessments, MLSecOps pipeline hardening and AI governance readiness.',
   locale: 'en',
   founder: {
