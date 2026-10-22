@@ -9,7 +9,7 @@ The site ships no security tooling; it links to the open-source ecosystem curate
 ```bash
 nvm use            # Node 24 (see .nvmrc); Astro 7 requires ≥ 22.12
 npm install
-cp .env.example .env   # fill the placeholders (booking URL, analytics domain, …)
+cp .env.example .env   # fill the placeholders (booking URL, contact email, …)
 npm run dev            # http://localhost:4321
 ```
 
@@ -51,8 +51,7 @@ All are read from environment variables (`.env` locally, project settings on Ver
 |---|---|
 | `PUBLIC_BOOKING_URL` | Every "Book a 30-minute assessment call" link (Cal.com or equivalent) |
 | `PUBLIC_CAL_LINK` | Cal.com `calLink` for the lazy-loaded embed on /contact (e.g. `riccardobiosas/30min`) |
-| `PUBLIC_ANALYTICS_DOMAIN` | Plausible `data-domain`; leave empty to disable analytics |
-| `PUBLIC_ANALYTICS_SCRIPT` | Plausible script URL (self-hosted Plausible: change host and update the CSP in `scripts/security-headers.mjs`) |
+| `PUBLIC_ANALYTICS` | Vercel Web Analytics; on automatically in Vercel builds, `on`/`off` overrides. Enable Web Analytics in the Vercel project settings |
 | `PUBLIC_FORM_ENDPOINT` | Contact form action; defaults to the bundled `/api/contact` |
 | `PUBLIC_CONTACT_EMAIL` | Shown on /contact, /privacy, /imprint and in Organization JSON-LD |
 | `PUBLIC_GITHUB_LIST_REPO` | Repo for the stars badge; switch to `MLSecOpsHub/awesome-MLSecOps` after the transfer |

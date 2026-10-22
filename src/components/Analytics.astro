@@ -1,0 +1,15 @@
+---
+// Vercel Web Analytics: cookieless page views plus custom events for any
+// element carrying data-event="Name" (data-goal is sent as the "type" property).
+import VercelAnalytics from '@vercel/analytics/astro';
+---
+<VercelAnalytics />
+<script>
+  import { track } from '@vercel/analytics';
+
+  document.addEventListener('click', (e) => {
+    const el = (e.target as Element | null)?.closest<HTMLElement>('[data-event]');
+    if (!el?.dataset.event) return;
+    track(el.dataset.event, el.dataset.goal ? { type: el.dataset.goal } : undefined);
+  });
+</script>

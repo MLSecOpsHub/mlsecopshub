@@ -31,14 +31,14 @@ const isActive = (href: string) => current === href || current.startsWith(`${hre
         ))}
         {HOLDING_PAGE ? (
           <>
-            <li><a href={utm(SITE.github.org)} rel="noopener" class="block rounded-sm px-3 py-2 text-[0.9rem] text-muted no-underline hover:bg-panel hover:text-ink plausible-event-name=GitHub+Click">GitHub</a></li>
+            <li><a href={utm(SITE.github.org)} rel="noopener" class="block rounded-sm px-3 py-2 text-[0.9rem] text-muted no-underline hover:bg-panel hover:text-ink" data-event="GitHub Click">GitHub</a></li>
             <li class="mt-2 lg:ml-2 lg:mt-0">
-              <a href={utm(SITE.newsletter.url)} class="btn btn-primary btn-small plausible-event-name=Newsletter+Click" title={SITE.cta.newsletter} rel="noopener">Newsletter</a>
+              <a href={utm(SITE.newsletter.url)} class="btn btn-primary btn-small" title={SITE.cta.newsletter} rel="noopener" data-event="Newsletter Click">Newsletter</a>
             </li>
           </>
         ) : (
           <li class="mt-2 lg:ml-2 lg:mt-0">
-            <a href={SITE.bookingUrl} class="btn btn-primary btn-small plausible-event-name=Booking+Click" data-goal="booking" title={SITE.cta.booking} rel="noopener">{SITE.cta.bookingShort}</a>
+            <a href={SITE.bookingUrl} class="btn btn-primary btn-small" data-goal="booking" title={SITE.cta.booking} rel="noopener" data-event="Booking Click">{SITE.cta.bookingShort}</a>
           </li>
         )}
       </ul>

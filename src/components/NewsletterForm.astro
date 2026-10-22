@@ -12,5 +12,5 @@ const { compact = false, id = 'newsletter' } = Astro.props;
     <label for={`${id}-email`}>Email for {SITE.newsletter.name}</label>
     <input id={`${id}-email`} type="email" name="email" required autocomplete="email" placeholder="you@company.com" inputmode="email" />
   </div>
-  <button type="submit" class="btn btn-secondary plausible-event-name=Newsletter+Submit">Subscribe, free</button>
+  <button type="submit" class="btn btn-secondary" data-event="Newsletter Submit">Subscribe, free</button>
 </form>

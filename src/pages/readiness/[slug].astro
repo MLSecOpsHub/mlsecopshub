@@ -34,8 +34,8 @@ const itemCount = entry.data.checklist.reduce((n, s) => n + s.items.length, 0);
     <p class="answer mt-5">{entry.data.answer}</p>
     <p class="mono mt-4 text-xs muted">Official source: <a href={entry.data.officialSource.url} rel="noopener">{entry.data.officialSource.label}</a> · Updated <time datetime={entry.data.updated.toISOString()}>{entry.data.updated.toISOString().slice(0, 10)}</time></p>
     <p class="mt-6 flex flex-wrap gap-3">
-      <a href={`/downloads/${entry.id}-checklist.pdf`} class="btn btn-secondary plausible-event-name=PDF+Download" data-goal="pdf">Checklist PDF ({itemCount} items)</a>
-      <a href={`/downloads/${entry.id}-checklist.md`} class="btn btn-secondary plausible-event-name=PDF+Download" data-goal="md">Checklist Markdown</a>
+      <a href={`/downloads/${entry.id}-checklist.pdf`} class="btn btn-secondary" data-goal="pdf" data-event="Download">Checklist PDF ({itemCount} items)</a>
+      <a href={`/downloads/${entry.id}-checklist.md`} class="btn btn-secondary" data-goal="md" data-event="Download">Checklist Markdown</a>
     </p>
   </section>
 
@@ -66,7 +66,7 @@ const itemCount = entry.data.checklist.reduce((n, s) => n + s.items.length, 0);
     <div class="prose">
       <Content />
       <h2 id="checklist">{entry.data.shortTitle} checklist</h2>
-      <p>The same checklist is available as <a href={`/downloads/${entry.id}-checklist.md`} class="plausible-event-name=PDF+Download">Markdown</a> and <a href={`/downloads/${entry.id}-checklist.pdf`} class="plausible-event-name=PDF+Download" data-goal="pdf">PDF</a>. Items are written so that each one is either done or not.</p>
+      <p>The same checklist is available as <a href={`/downloads/${entry.id}-checklist.md`} data-goal="md" data-event="Download">Markdown</a> and <a href={`/downloads/${entry.id}-checklist.pdf`} data-goal="pdf" data-event="Download">PDF</a>. Items are written so that each one is either done or not.</p>
       {entry.data.checklist.map((s) => (
         <section>
           <h3>{s.section}</h3>

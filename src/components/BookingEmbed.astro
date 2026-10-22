@@ -10,7 +10,7 @@ import { SITE } from '../config/site';
   <h2 class="mt-2 text-xl">{SITE.cta.booking}</h2>
   <p class="muted mt-2 max-w-prose">30 minutes, remote, no preparation needed. Bring the system you are worried about; leave with a scoped proposal or a reason not to need one.</p>
   <p class="mt-4 flex flex-wrap gap-3">
-    <a href={SITE.bookingUrl} class="btn btn-primary plausible-event-name=Booking+Click" data-goal="booking" rel="noopener">{SITE.cta.booking}</a>
+    <a href={SITE.bookingUrl} class="btn btn-primary" data-goal="booking" rel="noopener" data-event="Booking Click">{SITE.cta.booking}</a>
     <button type="button" class="btn btn-secondary" data-cal-load data-cal-link={SITE.calLink}>Show calendar here</button>
   </p>
   <div data-cal-target class="mt-6 min-h-0" aria-live="polite"></div>

@@ -19,13 +19,13 @@ const {
     <h2 id={`${id}-h`} class="mt-2 text-xl md:text-2xl">{heading}</h2>
     <p class="muted mt-2 max-w-prose">{body}</p>
     <p class="mt-4 flex flex-wrap gap-3">
-      <a href={SITE.bookingUrl} class="btn btn-primary plausible-event-name=Booking+Click" data-goal="booking" rel="noopener">{SITE.cta.booking}</a>
+      <a href={SITE.bookingUrl} class="btn btn-primary" data-goal="booking" rel="noopener" data-event="Booking Click">{SITE.cta.booking}</a>
       <a href="/contact" class="btn btn-secondary">Or write first</a>
     </p>
   </div>
   <div class="border-t border-line pt-6 md:border-l md:border-t-0 md:pl-8 md:pt-0">
     <p class="kicker">Secondary</p>
-    <p class="mt-2 mb-3 text-sm muted">Not ready to talk? <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">{SITE.newsletter.name}</a> covers the same ground every two weeks.</p>
+    <p class="mt-2 mb-3 text-sm muted">Not ready to talk? <a href={utm(SITE.newsletter.url)} rel="noopener" data-event="Newsletter Click">{SITE.newsletter.name}</a> covers the same ground every two weeks.</p>
     <NewsletterForm compact id={`${id}-nl`} />
   </div>
 </aside>

@@ -26,7 +26,8 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PUBLIC_BOOKING_URL: ${{ vars.PUBLIC_BOOKING_URL }}
       PUBLIC_CAL_LINK: ${{ vars.PUBLIC_CAL_LINK }}
-      PUBLIC_ANALYTICS_DOMAIN: ${{ vars.PUBLIC_ANALYTICS_DOMAIN }}
+      # The /_vercel/insights script only exists on Vercel deployments.
+      PUBLIC_ANALYTICS: 'off'
     steps:
       - uses: actions/checkout@v4
 

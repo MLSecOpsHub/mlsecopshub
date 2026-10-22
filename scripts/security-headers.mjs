@@ -31,11 +31,11 @@ function scan(html) {
 
 const csp = [
   "default-src 'self'",
-  ["script-src 'self'", ...scriptHashes, 'https://plausible.io', 'https://app.cal.com'].join(' '),
+  ["script-src 'self'", ...scriptHashes, 'https://app.cal.com'].join(' '),
   ["style-src 'self'", ...styleHashes, 'https://app.cal.com'].join(' '),
   "img-src 'self' data: https:",
   "font-src 'self'",
-  "connect-src 'self' https://plausible.io https://app.cal.com https://api.cal.com",
+  "connect-src 'self' https://app.cal.com https://api.cal.com",
   'frame-src https://app.cal.com https://cal.com https://themlsecopshacker.com',
   "form-action 'self' https://themlsecopshacker.com",
   "base-uri 'self'",

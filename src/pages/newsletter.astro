@@ -37,7 +37,7 @@ const graph = [webPage('/newsletter', title, description), breadcrumbs(crumbs)];
         <li class="grid gap-1 py-4 sm:grid-cols-[8rem_1fr]">
           <time datetime={i.date} class="mono text-xs muted">{fmtDate(i.date)}</time>
           <div>
-            <a href={utm(i.url)} rel="noopener" class="font-semibold text-ink plausible-event-name=Newsletter+Click">{i.title}</a>
+            <a href={utm(i.url)} rel="noopener" class="font-semibold text-ink" data-event="Newsletter Click">{i.title}</a>
             {i.summary && <p class="muted mt-1 text-sm">{i.summary}</p>}
           </div>
         </li>

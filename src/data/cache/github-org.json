@@ -5,47 +5,58 @@
       "url": "https://github.com/MLSecOpsHub/awesome-MLSecOps",
       "description": "A curated list of MLSecOps tools and resources for securing machine learning and AI systems - adversarial ML defense, LLM security, AI red teaming, model scanning, supply-chain protection, and MLOps pipeline security.",
       "homepage": "https://awesomemlsecops.com/",
-      "language": "",
+      "language": "Astro",
       "stars": 0,
       "topics": [],
-      "pushedAt": "2026-09-02T07:15:30Z",
+      "pushedAt": "2026-10-19T08:57:01Z",
       "fork": true,
-      "commits": 130
+      "commits": 155
     },
     {
       "name": "rogue-agents-watch",
       "url": "https://github.com/MLSecOpsHub/rogue-agents-watch",
-      "description": "Rogue Agent Watch: static dashboard (map, timeline, techniques, MISP/STIX feeds) over the Agentic Attack Index, a source-linked dataset of AI-agent cyberattacks.",
+      "description": "Rogue Agent Watch: tracking down rogue agents incidents, autonomous AI attacks and AI agents sandbox evasion",
       "homepage": "https://www.rogueagentswatch.com/",
       "language": "TypeScript",
-      "stars": 0,
+      "stars": 1,
       "topics": [
+        "agent-identity",
         "agent-security",
         "ai-governance",
         "ai-security-research",
         "ai-security-tool",
+        "autonomous-agent-identity",
+        "autonomous-agent-security",
         "autonomous-agents",
         "autonomous-agents-security",
+        "autonomous-ai-agent-swarms",
         "mitre-attack",
         "owasp",
         "rogue-agents",
+        "sandbox-escape",
+        "sandbox-eval",
+        "sandbox-evasion",
+        "security-incidents",
         "threat-intelliegence"
       ],
-      "pushedAt": "2026-10-09T19:17:04Z",
+      "pushedAt": "2026-10-16T08:10:13Z",
       "fork": false,
-      "commits": 25
+      "commits": 55
     },
     {
       "name": "agentic-attack-index",
       "url": "https://github.com/MLSecOpsHub/agentic-attack-index",
       "description": "Open, source-linked dataset of real-world cyberattacks executed or orchestrated by AI agents. Every field cited, every grade honest. Data layer of Rogue Agent Watch.",
-      "homepage": "https://mlsecopshub.github.io/rogue-agents-watch/",
+      "homepage": "https://mlsecopshub.github.io/agentic-attack-index/",
       "language": "JavaScript",
       "stars": 0,
       "topics": [
         "agentic-ai",
         "ai-agents",
         "ai-security",
+        "autonomous-agent-identity",
+        "autonomous-agent-security",
+        "autonomous-agents",
         "cti",
         "cybersecurity",
         "dataset",
@@ -53,12 +64,53 @@
         "mitre-atlas",
         "mlsecops",
         "prompt-injection",
+        "rogue-agents",
+        "rogue-agents-security",
+        "sandbox-escape",
+        "sandbox-eval",
+        "sandbox-evasion",
         "stix",
         "threat-intelligence"
       ],
-      "pushedAt": "2026-10-09T17:46:42Z",
+      "pushedAt": "2026-10-16T07:58:22Z",
       "fork": false,
-      "commits": 35
+      "commits": 85
+    },
+    {
+      "name": "provenance-engineering",
+      "url": "https://github.com/MLSecOpsHub/provenance-engineering",
+      "description": "Open knowledge base for Provenance Engineering: data lineage, identity governance, model provenance and software inventory.",
+      "homepage": "",
+      "language": "",
+      "stars": 1,
+      "topics": [
+        "agent-provenance",
+        "aibom",
+        "cbom",
+        "data-lineage",
+        "identity",
+        "identity-governance",
+        "identity-verification",
+        "model-provenance",
+        "provenance-engineering",
+        "sbom",
+        "software-inventory"
+      ],
+      "pushedAt": "2026-10-16T06:38:20Z",
+      "fork": false,
+      "commits": 4
+    },
+    {
+      "name": "world-models-security",
+      "url": "https://github.com/MLSecOpsHub/world-models-security",
+      "description": "",
+      "homepage": "",
+      "language": "",
+      "stars": 0,
+      "topics": [],
+      "pushedAt": "2026-10-15T08:10:34Z",
+      "fork": false,
+      "commits": 1
     },
     {
       "name": "agentic-access-control",
@@ -83,9 +135,25 @@
         "security-posture",
         "threat-modeling"
       ],
-      "pushedAt": "2026-10-09T09:02:36Z",
+      "pushedAt": "2026-10-11T17:42:54Z",
       "fork": false,
-      "commits": 21
+      "commits": 36
+    },
+    {
+      "name": "mlsecopshub",
+      "url": "https://github.com/MLSecOpsHub/mlsecopshub",
+      "description": "MLSecOpsHub website",
+      "homepage": "https://www.mlsecopshub.com/",
+      "language": "Astro",
+      "stars": 0,
+      "topics": [
+        "ai-security",
+        "mlsecops",
+        "open-source"
+      ],
+      "pushedAt": "2026-10-09T20:03:22Z",
+      "fork": false,
+      "commits": 6
     },
     {
       "name": "damn-vulnerable-skills",
@@ -110,19 +178,7 @@
       "pushedAt": "2026-09-11T13:38:21Z",
       "fork": false,
       "commits": 2
-    },
-    {
-      "name": "provenance-engineering",
-      "url": "https://github.com/MLSecOpsHub/provenance-engineering",
-      "description": "Identity and code/assets lineage & inventory is the next frontier",
-      "homepage": "",
-      "language": "",
-      "stars": 0,
-      "topics": [],
-      "pushedAt": "2026-08-30T08:03:31Z",
-      "fork": false,
-      "commits": 1
     }
   ],
-  "fetchedAt": "2026-10-09T19:22:59.725Z"
+  "fetchedAt": "2026-10-22T06:15:35.737Z"
 }

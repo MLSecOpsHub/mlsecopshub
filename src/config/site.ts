@@ -30,9 +30,11 @@ export const SITE = {
   bookingUrl: env.PUBLIC_BOOKING_URL ?? 'https://cal.com/riccardobiosas/30min',
   /** Cal.com "calLink" used by the lazy-loaded embed, e.g. "riccardobiosas/30min". */
   calLink: env.PUBLIC_CAL_LINK ?? 'riccardobiosas/30min',
-  /** Plausible analytics domain. Leave empty to disable the snippet. */
-  analyticsDomain: env.PUBLIC_ANALYTICS_DOMAIN ?? 'mlsecopshub.com',
-  analyticsScript: env.PUBLIC_ANALYTICS_SCRIPT ?? 'https://plausible.io/js/script.outbound-links.file-downloads.tagged-events.js',
+  /**
+   * Vercel Web Analytics. On by default only in Vercel builds, because the
+   * /_vercel/insights script exists nowhere else; PUBLIC_ANALYTICS=on|off overrides.
+   */
+  analytics: env.PUBLIC_ANALYTICS ? env.PUBLIC_ANALYTICS === 'on' : process.env.VERCEL === '1',
   /** Contact form endpoint. Defaults to the bundled Vercel function in /api/contact.ts. */
   formEndpoint: env.PUBLIC_FORM_ENDPOINT ?? '/api/contact',
   contactEmail: env.PUBLIC_CONTACT_EMAIL ?? 'hello@mlsecopshub.com',

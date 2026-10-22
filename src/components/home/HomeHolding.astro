@@ -120,14 +120,14 @@ const graph = [
         */}
         {/* Withheld for now (founder and project mentions); reinstate by moving it back into the paragraph:
           It was founded and is maintained by security engineer Riccardo Biosas. Its projects include the
-          <a href={utm(SITE.github.listUrl)} rel="noopener" class="plausible-event-name=GitHub+Click">awesome-MLSecOps</a> list
+          <a href={utm(SITE.github.listUrl)} rel="noopener" data-event="GitHub Click">awesome-MLSecOps</a> list
           ({gh.stars.toLocaleString('en-US')} GitHub stars, {gh.contributors} contributors), the Agentic Attack Index dataset and
-          <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">The MLSecOps Hacker</a>, a free newsletter on Substack.
+          <a href={utm(SITE.newsletter.url)} rel="noopener" data-event="Newsletter Click">The MLSecOps Hacker</a>, a free newsletter on Substack.
         */}
       </p>
       <p class="mt-8 flex flex-wrap gap-3">
-        <a href={utm(SITE.github.org)} class="btn btn-primary plausible-event-name=GitHub+Click" rel="noopener">Projects on GitHub</a>
-        <a href={utm(SITE.newsletter.url)} class="btn btn-secondary plausible-event-name=Newsletter+Click" rel="noopener">{SITE.cta.heroSecondary}</a>
+        <a href={utm(SITE.github.org)} class="btn btn-primary" rel="noopener" data-event="GitHub Click">Projects on GitHub</a>
+        <a href={utm(SITE.newsletter.url)} class="btn btn-secondary" rel="noopener" data-event="Newsletter Click">{SITE.cta.heroSecondary}</a>
       </p>
     </div>
   </section>
@@ -135,7 +135,7 @@ const graph = [
   <section aria-label="Proof" class="border-b border-line bg-panel">
     <div class="wrap grid gap-6 py-8 sm:grid-cols-2 lg:grid-cols-4">
       <div>
-        <p class="stat"><a href={utm(listUrl)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{gh.stars.toLocaleString('en-US')} ★</a></p>
+        <p class="stat"><a href={utm(listUrl)} rel="noopener" class="text-ink no-underline hover:underline" data-event="GitHub Click">{gh.stars.toLocaleString('en-US')} ★</a></p>
         <p class="stat-label mt-1">GitHub stars, awesome-MLSecOps</p>
       </div>
       <div>
@@ -143,11 +143,11 @@ const graph = [
         <p class="stat-label mt-1">Contributors to the list</p>
       </div>
       <div>
-        <p class="stat"><a href={utm(SITE.github.org)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{org.repos.length}</a></p>
+        <p class="stat"><a href={utm(SITE.github.org)} rel="noopener" class="text-ink no-underline hover:underline" data-event="GitHub Click">{org.repos.length}</a></p>
         <p class="stat-label mt-1">Open-source repositories</p>
       </div>
       <div>
-        <p class="stat"><a href={utm(SITE.newsletter.url)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=Newsletter+Click">{nl.count}</a></p>
+        <p class="stat"><a href={utm(SITE.newsletter.url)} rel="noopener" class="text-ink no-underline hover:underline" data-event="Newsletter Click">{nl.count}</a></p>
         <p class="stat-label mt-1">Newsletter issues published</p>
       </div>
     </div>
@@ -159,14 +159,14 @@ const graph = [
         <p class="kicker">GitHub</p>
         <h2 id="projects-h" class="mt-2">Open-source MLSecOps and AI security projects</h2>
       </div>
-      <a href={utm(SITE.github.org)} rel="noopener" class="mono text-sm plausible-event-name=GitHub+Click">github.com/{SITE.github.orgName} →</a>
+      <a href={utm(SITE.github.org)} rel="noopener" class="mono text-sm" data-event="GitHub Click">github.com/{SITE.github.orgName} →</a>
     </div>
     <p class="muted mt-3 max-w-prose">Everything MLSecOpsHub builds lives in public repositories on GitHub: the awesome-MLSecOps list of open-source MLSecOps and AI security tools, the Agentic Attack Index of documented AI agent attacks with its Rogue Agent Watch dashboard, and vulnerable-by-design labs for practising AI agent security. Star a project to follow it, or open an issue to contribute.</p>
     <ul class="mt-6 grid gap-4 md:grid-cols-2">
       {org.repos.map((r) => (
         <li class="panel p-5 flex flex-col gap-2">
           <h3 class="mono text-base">
-            <a href={utm(r.url)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{r.name}</a>
+            <a href={utm(r.url)} rel="noopener" class="text-ink no-underline hover:underline" data-event="GitHub Click">{r.name}</a>
           </h3>
           <p class="muted text-sm flex-1">{r.description || 'Early-stage repository; no description published yet.'}</p>
           {r.topics.length > 0 && (
@@ -190,7 +190,7 @@ const graph = [
     <p class="kicker">Definition</p>
     <h2 id="def-h" class="mt-2">What is MLSecOps?</h2>
     <p class="answer mt-4">{whatIsMlsecops}</p>
-    <p class="muted mt-3 max-w-prose text-sm">Read the reference explainer, <a href={utm(SITE.newsletter.whatIsMlsecops)} rel="noopener" class="plausible-event-name=Newsletter+Click">What is MLSecOps?</a>, on The MLSecOps Hacker, and browse tools by category on <a href={SITE.social.awesome} rel="noopener">awesomemlsecops.com</a>.</p>
+    <p class="muted mt-3 max-w-prose text-sm">Read the reference explainer, <a href={utm(SITE.newsletter.whatIsMlsecops)} rel="noopener" data-event="Newsletter Click">What is MLSecOps?</a>, on The MLSecOps Hacker, and browse tools by category on <a href={SITE.social.awesome} rel="noopener">awesomemlsecops.com</a>.</p>
   </section>
 
   <section class="wrap py-14 grid gap-10 lg:grid-cols-[1fr_1fr]" aria-labelledby="nl-h">
@@ -199,7 +199,7 @@ const graph = [
       <h2 id="nl-h" class="mt-2">The MLSecOps Hacker: the AI security newsletter</h2>
       <p class="muted mt-3 max-w-prose">The MLSecOps Hacker is the free newsletter of MLSecOpsHub on Substack, written for CISOs, security engineers and ML engineers.{/* withheld for now: "written by Riccardo Biosas" */} It covers model supply-chain attacks, prompt injection, agent and MCP security, and what the EU AI Act asks of engineering teams. {nl.count} issues published.</p>
       <div class="mt-6 max-w-xl"><NewsletterForm id="home-nl" /></div>
-      <p class="mono mt-3 text-xs muted">Subscribing sends your address to Substack only. Or read the <a href={utm(SITE.newsletter.url)} rel="noopener" class="plausible-event-name=Newsletter+Click">archive</a> without subscribing.</p>
+      <p class="mono mt-3 text-xs muted">Subscribing sends your address to Substack only. Or read the <a href={utm(SITE.newsletter.url)} rel="noopener" data-event="Newsletter Click">archive</a> without subscribing.</p>
     </div>
     <div>
       <p class="kicker">Latest issues</p>
@@ -207,7 +207,7 @@ const graph = [
         {nl.issues.slice(0, 4).map((i) => (
           <li class="py-4">
             <time datetime={i.date} class="mono text-xs muted">{fmtDate(i.date)}</time>
-            <p class="mt-1"><a href={utm(i.url)} rel="noopener" class="font-semibold text-ink plausible-event-name=Newsletter+Click">{i.title}</a></p>
+            <p class="mt-1"><a href={utm(i.url)} rel="noopener" class="font-semibold text-ink" data-event="Newsletter Click">{i.title}</a></p>
             {i.summary && <p class="muted mt-1 text-sm">{i.summary}</p>}
           </li>
         ))}
@@ -220,9 +220,9 @@ const graph = [
     <div class="panel p-6 self-start">
       <p class="kicker">Elsewhere</p>
       <ul class="mt-3 space-y-2 text-sm">
-        <li><a href={utm(SITE.github.org)} rel="me noopener" class="plausible-event-name=GitHub+Click">github.com/{SITE.github.orgName}</a> <span class="muted">: the organization and all repositories</span></li>
+        <li><a href={utm(SITE.github.org)} rel="me noopener" data-event="GitHub Click">github.com/{SITE.github.orgName}</a> <span class="muted">: the organization and all repositories</span></li>
         <li><a href={SITE.social.awesome} rel="noopener">awesomemlsecops.com</a> <span class="muted">: tools, resources and the MLSecOps glossary</span></li>
-        <li><a href={utm(SITE.social.substack)} rel="me noopener" class="plausible-event-name=Newsletter+Click">themlsecopshacker.com</a> <span class="muted">: newsletter archive on Substack</span></li>
+        <li><a href={utm(SITE.social.substack)} rel="me noopener" data-event="Newsletter Click">themlsecopshacker.com</a> <span class="muted">: newsletter archive on Substack</span></li>
         <li><a href={SITE.social.x} rel="me noopener">@MLSecOpsHacker on X</a> <span class="muted">: short-form analysis</span></li>
         <li><a href="/llms.txt">llms.txt</a> <span class="muted">: a plain-text summary of this site for AI assistants</span></li>
       </ul>

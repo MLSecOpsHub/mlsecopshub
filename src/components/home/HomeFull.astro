@@ -52,8 +52,8 @@ const graph = [webPage('/', title, description), faqPage(faq, '/')];
         <strong>MLSecOpsHub</strong> is the MLSecOps and AI security practice that delivers <a href="/services/ai-security-assessment">AI security assessments</a>, <a href="/services/mlsecops-pipeline-hardening">MLSecOps pipeline hardening</a> and <a href="/services/ai-governance-readiness">AI governance readiness</a> for the EU AI Act, Cyber Resilience Act, NIST AI RMF and ISO/IEC 42001. It is the organization behind The MLSecOps Hacker newsletter and the awesome-MLSecOps list.
       </p>
       <p class="mt-8 flex flex-wrap gap-3">
-        <a href={SITE.bookingUrl} class="btn btn-primary plausible-event-name=Booking+Click" data-goal="booking" rel="noopener">{SITE.cta.heroPrimary}</a>
-        <a href={utm(SITE.newsletter.url)} class="btn btn-secondary plausible-event-name=Newsletter+Click" rel="noopener">{SITE.cta.heroSecondary}</a>
+        <a href={SITE.bookingUrl} class="btn btn-primary" data-goal="booking" rel="noopener" data-event="Booking Click">{SITE.cta.heroPrimary}</a>
+        <a href={utm(SITE.newsletter.url)} class="btn btn-secondary" rel="noopener" data-event="Newsletter Click">{SITE.cta.heroSecondary}</a>
       </p>
     </div>
   </section>
@@ -61,7 +61,7 @@ const graph = [webPage('/', title, description), faqPage(faq, '/')];
   <section aria-label="Proof" class="border-b border-line bg-panel">
     <div class="wrap grid gap-6 py-8 sm:grid-cols-2 lg:grid-cols-4">
       <div>
-        <p class="stat"><a href={utm(SITE.github.listUrl)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=GitHub+Click">{gh.stars.toLocaleString('en-US')} ★</a></p>
+        <p class="stat"><a href={utm(SITE.github.listUrl)} rel="noopener" class="text-ink no-underline hover:underline" data-event="GitHub Click">{gh.stars.toLocaleString('en-US')} ★</a></p>
         <p class="stat-label mt-1">GitHub stars, awesome-MLSecOps</p>
       </div>
       <div>
@@ -69,7 +69,7 @@ const graph = [webPage('/', title, description), faqPage(faq, '/')];
         <p class="stat-label mt-1">Contributors to the list</p>
       </div>
       <div>
-        <p class="stat"><a href={utm(SITE.newsletter.url)} rel="noopener" class="text-ink no-underline hover:underline plausible-event-name=Newsletter+Click">{nl.count}</a></p>
+        <p class="stat"><a href={utm(SITE.newsletter.url)} rel="noopener" class="text-ink no-underline hover:underline" data-event="Newsletter Click">{nl.count}</a></p>
         <p class="stat-label mt-1">Newsletter issues published</p>
       </div>
       <div>
@@ -154,7 +154,7 @@ const graph = [webPage('/', title, description), faqPage(faq, '/')];
         <li class="flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:gap-6">
           <time datetime={i.date} class="mono text-xs muted sm:w-28 sm:flex-none">{fmtDate(i.date)}</time>
           <div>
-            <a href={utm(i.url)} rel="noopener" class="font-semibold text-ink plausible-event-name=Newsletter+Click">{i.title}</a>
+            <a href={utm(i.url)} rel="noopener" class="font-semibold text-ink" data-event="Newsletter Click">{i.title}</a>
             {i.summary && <p class="muted mt-1 text-sm">{i.summary}</p>}
           </div>
         </li>
@@ -167,7 +167,7 @@ const graph = [webPage('/', title, description), faqPage(faq, '/')];
     <div class="panel p-6 self-start">
       <p class="kicker">Elsewhere</p>
       <ul class="mt-3 space-y-2 text-sm">
-        <li><a href={utm(SITE.github.listUrl)} rel="noopener" class="plausible-event-name=GitHub+Click">awesome-MLSecOps on GitHub</a> <span class="muted">: the curated list, moving to the {SITE.github.orgName} organization</span></li>
+        <li><a href={utm(SITE.github.listUrl)} rel="noopener" data-event="GitHub Click">awesome-MLSecOps on GitHub</a> <span class="muted">: the curated list, moving to the {SITE.github.orgName} organization</span></li>
         <li><a href={SITE.social.awesome} rel="noopener">awesomemlsecops.com</a> <span class="muted">: tools, resources and the MLSecOps glossary</span></li>
         <li><a href="/about">About Riccardo Biosas</a> <span class="muted">: the security engineer behind the practice</span></li>
         <li><a href="/blog">Blog</a> <span class="muted">: announcements and data releases</span></li>

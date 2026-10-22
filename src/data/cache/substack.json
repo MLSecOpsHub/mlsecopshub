@@ -1,6 +1,12 @@
 {
   "issues": [
     {
+      "title": "Research roundup #1: Rogue Agents, Provenance Engineering and Vulnerable Agent Skills",
+      "url": "https://themlsecopshacker.com/p/research-roundup-1-rogue-agents-provenance",
+      "date": "2026-10-16T11:55:09.000Z",
+      "summary": "The AI Security threats and research areas I am researching at the end of this quarter and why"
+    },
+    {
       "title": "Safetensors Won. Model Serialization Attacks Didn’t Stop.",
       "url": "https://themlsecopshacker.com/p/safetensors-won-model-serialization",
       "date": "2026-08-28T05:40:54.000Z",
@@ -19,6 +25,6 @@
       "summary": "The machines are coming, but who watches the watchers?"
     }
   ],
-  "count": 3,
-  "fetchedAt": "2026-10-09T19:22:58.545Z"
+  "count": 4,
+  "fetchedAt": "2026-10-22T06:15:35.574Z"
 }

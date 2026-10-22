@@ -30,7 +30,7 @@ const graph = [webPage('/readiness', title, description, 'CollectionPage'), brea
           <h2 class="mt-2 text-xl"><a href={`/readiness/${r.id}`} class="text-ink no-underline hover:underline">{r.data.shortTitle}</a></h2>
           <p class="muted mt-2 flex-1 text-sm">{r.data.summary}</p>
           <p class="mono mt-4 text-xs muted">{r.data.controls.length} obligations mapped · {r.data.checklist.reduce((n, s) => n + s.items.length, 0)} checklist items</p>
-          <p class="mt-3 flex flex-wrap gap-3 text-sm"><a href={`/readiness/${r.id}`}>Read the mapping →</a><a href={`/downloads/${r.id}-checklist.pdf`} class="plausible-event-name=PDF+Download" data-goal="pdf">Checklist PDF</a></p>
+          <p class="mt-3 flex flex-wrap gap-3 text-sm"><a href={`/readiness/${r.id}`}>Read the mapping →</a><a href={`/downloads/${r.id}-checklist.pdf`} data-goal="pdf" data-event="Download">Checklist PDF</a></p>
         </article>
       ))}
     </div>

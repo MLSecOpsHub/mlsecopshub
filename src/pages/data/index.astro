@@ -63,9 +63,9 @@ const graph = [
       <div class="panel p-4"><dt class="stat-label">License</dt><dd class="mt-1 text-sm font-semibold"><a href={ds.data.license} rel="noopener">CC BY 4.0</a></dd></div>
     </dl>
     <p class="mt-6 flex flex-wrap gap-3">
-      <a href={utm(ds.data.repoUrl)} class="btn btn-secondary plausible-event-name=GitHub+Click" rel="noopener">Repository on GitHub</a>
-      <a href="/data/agentic-attack-index.json" class="btn btn-secondary plausible-event-name=PDF+Download" data-goal="json">Raw JSON</a>
-      <a href="/data/agentic-attack-index.csv" class="btn btn-secondary plausible-event-name=PDF+Download" data-goal="csv">CSV</a>
+      <a href={utm(ds.data.repoUrl)} class="btn btn-secondary" rel="noopener" data-event="GitHub Click">Repository on GitHub</a>
+      <a href="/data/agentic-attack-index.json" class="btn btn-secondary" data-goal="json" data-event="Download">Raw JSON</a>
+      <a href="/data/agentic-attack-index.csv" class="btn btn-secondary" data-goal="csv" data-event="Download">CSV</a>
     </p>
   </section>
 
