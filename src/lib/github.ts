@@ -118,7 +118,8 @@ export const getOrgRepos = memoize(async (): Promise<OrgRepos> => {
         name: String(r.name),
         url: String(r.html_url),
         description: typeof r.description === 'string' ? r.description.trim() : '',
-        homepage: typeof r.homepage === 'string' ? r.homepage.trim() : '',
+        // Only https links: the value is set by repo admins and rendered as an href.
+        homepage: typeof r.homepage === 'string' && /^https:\/\//i.test(r.homepage.trim()) ? r.homepage.trim() : '',
         language: typeof r.language === 'string' ? r.language : '',
         stars: Number(r.stargazers_count ?? 0),
         topics: Array.isArray(r.topics) ? (r.topics as string[]) : [],

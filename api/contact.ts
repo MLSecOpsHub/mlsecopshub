@@ -12,7 +12,13 @@ interface Payload { email: string; message: string; website?: string }
 
 async function parse(req: Request): Promise<Payload> {
   const ct = req.headers.get('content-type') ?? '';
-  if (ct.includes('application/json')) return (await req.json()) as Payload;
+  if (ct.includes('application/json')) {
+    const body: unknown = await req.json();
+    const obj = (body && typeof body === 'object' ? body : {}) as Record<string, unknown>;
+    // Non-string fields are treated as empty so validation rejects them with a 400.
+    const str = (v: unknown) => (typeof v === 'string' ? v : '');
+    return { email: str(obj.email), message: str(obj.message), website: str(obj.website) };
+  }
   const form = await req.formData();
   const get = (k: string) => (form.get(k) ?? '').toString();
   return { email: get('email'), message: get('message'), website: get('website') };
@@ -27,8 +33,10 @@ function respond(req: Request, status: number, body: string): Response {
   return new Response(JSON.stringify({ ok: status < 400, message: body }), { status, headers: { 'Content-Type': 'application/json' } });
 }
 
-export default async function handler(req: Request): Promise<Response> {
-  if (req.method !== 'POST') return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'POST' } });
+// Named method export: Vercel's Node runtime treats a default-exported function
+// as a legacy (req, res) handler, which crashes on req.headers.get and never
+// sends the returned Response. Other methods get a 405 from the platform.
+export async function POST(req: Request): Promise<Response> {
   const origin = req.headers.get('origin');
   const allowed = process.env.CONTACT_ALLOWED_ORIGIN ?? 'https://mlsecopshub.com';
   if (origin && origin !== allowed) return new Response('Forbidden', { status: 403 });
